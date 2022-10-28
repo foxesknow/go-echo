@@ -113,6 +113,11 @@ func Test_Section_ValueOrDefault(t *testing.T) {
 	if dob != "October" {
 		t.Error("dob should have defaulted to October")
 	}
+
+	age := jack.ValueOrDefault("age", "10")
+	if age != "39" {
+		t.Error("shouldn't get back the default value")
+	}
 }
 
 func Test_Section_HasKey(t *testing.T) {
@@ -154,6 +159,28 @@ func Test_Section_Keys(t *testing.T) {
 	}
 }
 
+func Test_Section_Pairs(t *testing.T) {
+	var config = Config{}
+	ini, _ := FromString(&config, iniSource)
+
+	jack, _ := ini.Section("jack")
+	pairs := jack.Pairs()
+
+	if len(pairs) != 2 {
+		t.Error("expected 2 items")
+	}
+
+	for _, pair := range pairs {
+		if pair.Key == "age" && pair.Value == "39" {
+			continue
+		} else if pair.Key == "location" && pair.Value == "island" {
+			continue
+		} else {
+			t.Errorf("unexpeced pair: %s", pair)
+		}
+	}
+}
+
 func Test_Section_AsString(t *testing.T) {
 	var config = Config{}
 	ini, _ := FromString(&config, iniSource)
@@ -162,5 +189,19 @@ func Test_Section_AsString(t *testing.T) {
 	asString := fmt.Sprintf("%s", server)
 	if asString != "Server" {
 		t.Error("expected Server")
+	}
+}
+
+func Test_Section_CaseSensitive(t *testing.T) {
+	var config = Config{CaseSensitive: true}
+	ini, _ := FromString(&config, iniSource)
+
+	server, _ := ini.Section("Server")
+	if server.HasKey("PORT") {
+		t.Error("shouldn't have found PORT")
+	}
+
+	if !server.HasKey("port") {
+		t.Error("should have found port")
 	}
 }

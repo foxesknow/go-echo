@@ -2,8 +2,12 @@ package ini
 
 import "fmt"
 
+// A key value pair representing an item in a section
 type KeyValue struct {
-	Key   string
+	// The key
+	Key string
+
+	// The value
 	Value string
 }
 

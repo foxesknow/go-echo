@@ -16,20 +16,25 @@ func newSection(config *Config, name string) *Section {
 	}
 }
 
+// Returns the number of items in the section
 func (self *Section) Len() int {
 	return len(self.values)
 }
 
+// Returns the name of the section, in the case it existed in the source
 func (self *Section) Name() string {
 	return self.name
 }
 
+// Returns the value for a given key.
+// If the key does not exist returns ("", false)
 func (self *Section) Value(key string) (value string, found bool) {
 	key = self.normalizeKey(key)
 	value, found = self.values[key]
 	return
 }
 
+// Returns the value for a given key, or defaultValue if it does not exist
 func (self *Section) ValueOrDefault(key string, defaultValue string) string {
 	key = self.normalizeKey(key)
 	value, found := self.values[key]
@@ -41,12 +46,14 @@ func (self *Section) ValueOrDefault(key string, defaultValue string) string {
 	}
 }
 
+// Checks to see if a key is present
 func (self *Section) HasKey(key string) bool {
 	key = self.normalizeKey(key)
 	_, found := self.values[key]
 	return found
 }
 
+// Returns the name of all the keys in the section
 func (self *Section) Keys() []string {
 	keys := make([]string, len(self.values))
 
@@ -59,6 +66,7 @@ func (self *Section) Keys() []string {
 	return keys
 }
 
+// Returns the key/value pairs for all items in the section
 func (self *Section) Pairs() []KeyValue {
 	pairs := make([]KeyValue, len(self.values))
 

@@ -5,13 +5,15 @@ type Ini struct {
 	config   Config
 }
 
-func (self *Ini) Section(name string) (*Section, bool) {
+// Returns the specified section.
+// If not found then returns (nil, false)
+func (self *Ini) Section(name string) (section *Section, found bool) {
 	name = self.config.caseNormalize(name)
-	section, found := self.sections[name]
-
-	return section, found
+	section, found = self.sections[name]
+	return
 }
 
+// Returns the names of all the sections in the ini file
 func (self *Ini) Names() []string {
 	names := make([]string, len(self.sections))
 

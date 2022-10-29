@@ -11,6 +11,7 @@ import (
 type KeyMapper func(string) string
 type ValueMapper func(string) string
 
+// Loads an ini file from a file
 func FromFile(config *Config, name string) (*Ini, error) {
 	file, err := os.Open(name)
 	if err != nil {
@@ -27,6 +28,7 @@ func FromFile(config *Config, name string) (*Ini, error) {
 	return ini, nil
 }
 
+// Loads an ini file from a reader
 func FromReader(config *Config, reader io.Reader) (*Ini, error) {
 	buffer := bytes.Buffer{}
 
@@ -39,6 +41,7 @@ func FromReader(config *Config, reader io.Reader) (*Ini, error) {
 	return FromString(config, text)
 }
 
+// Loads an ini file from test
 func FromString(config *Config, text string) (*Ini, error) {
 	lines := strings.Split(text, "\n")
 
@@ -59,7 +62,8 @@ func FromString(config *Config, text string) (*Ini, error) {
 				return nil, fmt.Errorf("empty section name on line %d", lineNo+1)
 			}
 
-			// We'll keep the section name in the case it arrived in for the
+			// We'll keep the section name in the case it arrived in for the name of the section
+			// but store it using the casing rules
 			normalizedSectionName := ini.config.caseNormalize(sectionName)
 			activeSection = newSection(config, sectionName)
 			ini.sections[normalizedSectionName] = activeSection
@@ -73,6 +77,15 @@ func FromString(config *Config, text string) (*Ini, error) {
 			key, value, err := extractKeyValue(lineNo, line)
 			if err != nil {
 				return nil, err
+			}
+
+			// Apply any optional mappings that we've been configured for
+			if keyMapper := ini.config.ValueMapper; keyMapper != nil {
+				key = keyMapper(key)
+			}
+
+			if valueMapper := ini.config.ValueMapper; valueMapper != nil {
+				value = valueMapper(value)
 			}
 
 			key = ini.config.caseNormalize(key)
@@ -101,7 +114,7 @@ func extractKeyValue(lineNo int, line string) (key, value string, err error) {
 }
 
 func isComment(config *Config, text string) bool {
-	return text[0] == ';'
+	return text[0] == ';' || text[0] == '#'
 }
 
 func isSection(text string) (string, bool) {

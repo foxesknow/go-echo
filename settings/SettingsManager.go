@@ -1,6 +1,6 @@
 package settings
 
-import "go-echo/settings/internal/environment"
+import "github.com/foxesknow/go-echo/settings/internal/environment"
 
 var providers = make(map[string]SettingProvider)
 

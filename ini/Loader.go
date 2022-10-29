@@ -3,10 +3,11 @@ package ini
 import (
 	"bytes"
 	"fmt"
-	"go-echo/collections"
 	"io"
 	"os"
 	"strings"
+
+	"github.com/foxesknow/go-echo/collections"
 )
 
 // Loads an ini file from a file

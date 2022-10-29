@@ -1,8 +1,9 @@
 package ini
 
 import (
-	"go-echo/collections"
 	"strings"
+
+	"github.com/foxesknow/go-echo/collections"
 )
 
 type Section struct {

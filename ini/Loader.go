@@ -9,9 +9,6 @@ import (
 	"strings"
 )
 
-type KeyMapper func(string) string
-type ValueMapper func(string) string
-
 // Loads an ini file from a file
 func FromFile(config *Config, name string) (*Ini, error) {
 	file, err := os.Open(name)
@@ -81,7 +78,7 @@ func FromString(config *Config, text string) (*Ini, error) {
 			}
 
 			// Apply any optional mappings that we've been configured for
-			if keyMapper := ini.config.ValueMapper; keyMapper != nil {
+			if keyMapper := ini.config.KeyMapper; keyMapper != nil {
 				key = keyMapper(key)
 			}
 
@@ -95,10 +92,6 @@ func FromString(config *Config, text string) (*Ini, error) {
 	}
 
 	return ini, nil
-}
-
-func parseValue(config *Config, text string) string {
-	return ""
 }
 
 func extractKeyValue(lineNo int, line string) (key, value string, err error) {

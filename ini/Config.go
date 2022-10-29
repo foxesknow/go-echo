@@ -8,10 +8,10 @@ type Config struct {
 	CaseSensitive bool
 
 	// (optional) called on each key during the loading process
-	KeyMapper KeyMapper
+	KeyMapper func(string) string
 
 	// (optional) called on each value during the loading process
-	ValueMapper ValueMapper
+	ValueMapper func(string) string
 }
 
 // Applies the casing rules as specified by the user

@@ -1,17 +1,20 @@
 package ini
 
-import "strings"
+import (
+	"go-echo/collections"
+	"strings"
+)
 
 type Section struct {
 	name   string
-	values map[string]string
+	values map[string]collections.KeyValuePair[string, string]
 	config Config
 }
 
 func newSection(config *Config, name string) *Section {
 	return &Section{
 		name:   name,
-		values: make(map[string]string),
+		values: make(map[string]collections.KeyValuePair[string, string]),
 		config: *config,
 	}
 }
@@ -30,17 +33,17 @@ func (self *Section) Name() string {
 // If the key does not exist returns ("", false)
 func (self *Section) Value(key string) (value string, found bool) {
 	key = self.normalizeKey(key)
-	value, found = self.values[key]
-	return
+	pair, found := self.values[key]
+	return pair.Value, found
 }
 
 // Returns the value for a given key, or defaultValue if it does not exist
 func (self *Section) ValueOrDefault(key string, defaultValue string) string {
 	key = self.normalizeKey(key)
-	value, found := self.values[key]
+	pair, found := self.values[key]
 
 	if found {
-		return value
+		return pair.Value
 	} else {
 		return defaultValue
 	}
@@ -67,12 +70,12 @@ func (self *Section) Keys() []string {
 }
 
 // Returns the key/value pairs for all items in the section
-func (self *Section) Pairs() []KeyValue {
-	pairs := make([]KeyValue, len(self.values))
+func (self *Section) Pairs() []collections.KeyValuePair[string, string] {
+	pairs := make([]collections.KeyValuePair[string, string], len(self.values))
 
 	var i = 0
-	for key, value := range self.values {
-		pairs[i] = KeyValue{key, value}
+	for _, pair := range self.values {
+		pairs[i] = pair
 		i++
 	}
 

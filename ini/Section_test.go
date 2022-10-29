@@ -9,8 +9,8 @@ import (
 
 var iniSource = `
 	[Jack]
-	age = 39
-	location = island
+	Age = 39
+	Location = island
 
 	[Server]
 	host = www.foo.com
@@ -170,10 +170,11 @@ func Test_Section_Pairs(t *testing.T) {
 		t.Error("expected 2 items")
 	}
 
+	// The pairs come back with the key name in the case defined in the source
 	for _, pair := range pairs {
-		if pair.Key == "age" && pair.Value == "39" {
+		if pair.Key == "Age" && pair.Value == "39" {
 			continue
-		} else if pair.Key == "location" && pair.Value == "island" {
+		} else if pair.Key == "Location" && pair.Value == "island" {
 			continue
 		} else {
 			t.Errorf("unexpeced pair: %s", pair)

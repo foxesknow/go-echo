@@ -3,6 +3,7 @@ package ini
 import (
 	"bytes"
 	"fmt"
+	"go-echo/collections"
 	"io"
 	"os"
 	"strings"
@@ -88,8 +89,8 @@ func FromString(config *Config, text string) (*Ini, error) {
 				value = valueMapper(value)
 			}
 
-			key = ini.config.caseNormalize(key)
-			activeSection.values[key] = value
+			normalizedKey := ini.config.caseNormalize(key)
+			activeSection.values[normalizedKey] = collections.KeyValuePair[string, string]{Key: key, Value: value}
 		}
 	}
 

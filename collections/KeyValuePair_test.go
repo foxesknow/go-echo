@@ -1,11 +1,11 @@
-package ini
+package collections
 
 import (
 	"testing"
 )
 
 func TestAsString(t *testing.T) {
-	kvp := KeyValue{Key: "Jack", Value: "Island"}
+	kvp := KeyValuePair[string, string]{Key: "Jack", Value: "Island"}
 	asString := kvp.String()
 
 	if len(asString) == 0 {

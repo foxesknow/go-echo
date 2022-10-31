@@ -10,8 +10,10 @@ import (
 	"github.com/foxesknow/go-echo/collections"
 )
 
+const blockMarker string = "\"\"\""
+
 // Loads an ini file from a file
-func FromFile(config *Config, name string) (*Ini, error) {
+func FromFile(config *Config, name string) (*Tree, error) {
 	file, err := os.Open(name)
 	if err != nil {
 		return nil, fmt.Errorf("could not open %s", name)
@@ -28,7 +30,7 @@ func FromFile(config *Config, name string) (*Ini, error) {
 }
 
 // Loads an ini file from a reader
-func FromReader(config *Config, reader io.Reader) (*Ini, error) {
+func FromReader(config *Config, reader io.Reader) (*Tree, error) {
 	buffer := bytes.Buffer{}
 
 	_, err := buffer.ReadFrom(reader)
@@ -40,13 +42,15 @@ func FromReader(config *Config, reader io.Reader) (*Ini, error) {
 	return FromString(config, text)
 }
 
-// Loads an ini file from test
-func FromString(config *Config, text string) (*Ini, error) {
+// Loads an ini file from a string
+func FromString(config *Config, text string) (*Tree, error) {
 	lines := strings.Split(text, "\n")
 
-	ini := newIni(config)
-
-	var activeSection *Section
+	// We make a copy of the config so that the caller can't
+	// affect the behavior after the load
+	configCopy := *config
+	root := newTree(&configCopy, "")
+	activeSection := root
 
 	for lineNo := 0; lineNo < len(lines); lineNo++ {
 		line := strings.TrimSpace(lines[lineNo])
@@ -56,56 +60,85 @@ func FromString(config *Config, text string) (*Ini, error) {
 			continue
 		}
 
+		// We'll allow properties at the top that are not part of a section to go into the root
 		if sectionName, isSection := isSection(line); isSection {
 			if sectionName == "" {
 				return nil, fmt.Errorf("empty section name on line %d", lineNo+1)
 			}
 
-			// We'll keep the section name in the case it arrived in for the name of the section
-			// but store it using the casing rules
-			normalizedSectionName := ini.config.caseNormalize(sectionName)
-			activeSection = newSection(config, sectionName)
-			ini.sections[normalizedSectionName] = activeSection
-
-		} else {
-			// It's a key-value pair
-			if activeSection == nil {
-				return nil, fmt.Errorf("found a key when not is a section on line %d", lineNo+1)
+			sectionParts, err := getSectionParts(sectionName)
+			if err != nil {
+				return nil, err
 			}
 
-			key, value, err := extractKeyValue(lineNo, line)
+			// We need to navigate from the root down
+			activeSection = root
+			for _, sectionPart := range sectionParts {
+				activeSection = activeSection.GetOrCreateChild(sectionPart)
+			}
+
+		} else {
+			key, value, lineDelta, err := extractKeyValue(lineNo, line, lines)
 			if err != nil {
 				return nil, err
 			}
 
 			// Apply any optional mappings that we've been configured for
-			if keyMapper := ini.config.KeyMapper; keyMapper != nil {
+			if keyMapper := root.config.KeyMapper; keyMapper != nil {
 				key = keyMapper(key)
 			}
 
-			if valueMapper := ini.config.ValueMapper; valueMapper != nil {
-				value = valueMapper(value)
+			if valueMapper := root.config.ValueMapper; valueMapper != nil {
+				value = valueMapper(key, value)
 			}
 
-			normalizedKey := ini.config.caseNormalize(key)
+			normalizedKey := root.config.caseNormalize(key)
 			activeSection.values[normalizedKey] = collections.KeyValuePair[string, string]{Key: key, Value: value}
+
+			lineNo += lineDelta
 		}
 	}
 
-	return ini, nil
+	return root, nil
 }
 
-func extractKeyValue(lineNo int, line string) (key, value string, err error) {
+func extractKeyValue(lineNo int, line string, lines []string) (key, value string, lineDelta int, err error) {
 	pivot := strings.Index(line, "=")
 	if pivot == -1 {
-		return "", "", fmt.Errorf("no = symbol on line %d", lineNo)
+		return "", "", 0, fmt.Errorf("no = symbol on line %d", lineNo+1)
 	}
 
 	key = strings.TrimSpace(line[:pivot])
 	value = strings.TrimSpace(line[pivot+1:])
-	err = nil
 
-	return
+	if value == blockMarker {
+		value = ""
+		lineDelta = 0
+
+		foundMarker := false
+		lineNo++
+		for ; lineNo < len(lines); lineNo++ {
+			s := lines[lineNo]
+			if s == blockMarker {
+				lineDelta++
+				foundMarker = true
+				break
+			}
+
+			lineDelta++
+			if value == "" {
+				value = s
+			} else {
+				value += "\n" + s
+			}
+		}
+
+		if !foundMarker {
+			return "", "", 0, fmt.Errorf("could not find end marker for %s", key)
+		}
+	}
+
+	return key, value, lineDelta, nil
 }
 
 func isComment(config *Config, text string) bool {
@@ -122,9 +155,17 @@ func isSection(text string) (string, bool) {
 	return "", false
 }
 
-func newIni(config *Config) *Ini {
-	return &Ini{
-		sections: make(map[string]*Section),
-		config:   *config,
+func getSectionParts(name string) ([]string, error) {
+	parts := strings.Split(name, ".")
+
+	for i, part := range parts {
+		part = strings.TrimSpace(part)
+		if part == "" {
+			return nil, fmt.Errorf("invalid section name: %s", name)
+		}
+
+		parts[i] = part
 	}
+
+	return parts, nil
 }

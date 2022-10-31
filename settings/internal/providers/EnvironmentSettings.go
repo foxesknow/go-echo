@@ -1,11 +1,11 @@
-package environment
+package providers
 
 import "os"
 
 type EnvironmentSettings struct {
 }
 
-func New() *EnvironmentSettings {
+func NewEnvironmentSettings() *EnvironmentSettings {
 	return &EnvironmentSettings{}
 }
 

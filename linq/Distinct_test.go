@@ -23,7 +23,7 @@ func Test_Distinct(t *testing.T) {
 		t.Error("expected 6 items")
 	}
 
-	for value := range []int{1, 2, 3, 5, 7, 9} {
+	for _, value := range []int{1, 2, 3, 5, 7, 9} {
 		if ok, _ := Contains(distinct, value); !ok {
 			t.Errorf("could not find %d", value)
 		}

@@ -33,10 +33,8 @@ func FirstWhere[T any](enumerable collections.Enumerable[T], predicate func(T) b
 
 // Returns the first item in the sequence, or a default value is the sequence is empty
 func FirstOrDefault[T any](enumerable collections.Enumerable[T], defaultValue T) T {
-	e := enumerable.GetEnumerator()
-
-	if e.MoveNext() {
-		return e.Current()
+	if item, found := First(enumerable); found {
+		return item
 	}
 
 	return defaultValue
@@ -45,13 +43,8 @@ func FirstOrDefault[T any](enumerable collections.Enumerable[T], defaultValue T)
 // Returns the first item in the sequence that matches a predicate,
 // or a default value is the sequence is empty
 func FirstOrDefaultWhere[T any](enumerable collections.Enumerable[T], defaultValue T, predicate func(T) bool) T {
-	e := enumerable.GetEnumerator()
-
-	if e.MoveNext() {
-		current := e.Current()
-		if predicate(current) {
-			return current
-		}
+	if item, found := FirstWhere(enumerable, predicate); found {
+		return item
 	}
 
 	return defaultValue

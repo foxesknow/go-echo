@@ -30,3 +30,7 @@ func (self *sliceEnumerable[T]) GetEnumerator() Enumerator[T] {
 func EnumerateSlice[T any](slice []T) Enumerable[T] {
 	return &sliceEnumerable[T]{slice: slice}
 }
+
+func EnumerateValues[T any](values ...T) Enumerable[T] {
+	return &sliceEnumerable[T]{slice: values}
+}

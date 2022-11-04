@@ -3,11 +3,11 @@ package linq
 import (
 	"testing"
 
-	"github.com/foxesknow/go-echo/collections"
+	C "github.com/foxesknow/go-echo/collections"
 )
 
 func Test_First_Empty(t *testing.T) {
-	value, found := First(collections.EmptyEnumerable[int]())
+	value, found := First(C.EmptyEnumerable[int]())
 
 	if found {
 		t.Error("nothing should have been found")
@@ -20,7 +20,7 @@ func Test_First_Empty(t *testing.T) {
 }
 
 func Test_First(t *testing.T) {
-	numbers := collections.EnumerateSlice([]int{5, 7, 9})
+	numbers := C.EnumerateSlice([]int{5, 7, 9})
 	value, found := First(numbers)
 
 	if !found {
@@ -29,5 +29,54 @@ func Test_First(t *testing.T) {
 
 	if value != 5 {
 		t.Error("value should be 5")
+	}
+}
+
+func Test_FirstOrDefault_Empty(t *testing.T) {
+	value := FirstOrDefault(C.EmptyEnumerable[int](), 99)
+
+	if value != 99 {
+		t.Error("should have 99")
+	}
+}
+
+func Test_FirstOrDefault(t *testing.T) {
+	value := FirstOrDefault(C.EnumerateValues(5, 7, 9), 99)
+
+	if value != 5 {
+		t.Error("should have 5")
+	}
+}
+
+func Test_FirstWhere_Empty(t *testing.T) {
+	value, found := FirstWhere(C.EmptyEnumerable[int](), func(x int) bool { return x > 1 })
+
+	// value will bet set to the "zero value"
+	if value != 0 || found {
+		t.Error("should not have found anything")
+	}
+}
+
+func Test_FirstWhere(t *testing.T) {
+	value, found := FirstWhere(C.EnumerateValues(5, 7, 9), func(x int) bool { return x > 8 })
+
+	if value != 9 || !found {
+		t.Error("should have found something")
+	}
+}
+
+func Test_FirstOrDefaultWhere(t *testing.T) {
+	value := FirstOrDefaultWhere(C.EnumerateValues(5, 7, 9), 20, func(x int) bool { return x > 9 })
+
+	if value != 20 {
+		t.Error("should have found 20")
+	}
+}
+
+func Test_FirstOrDefaultWhere_Found(t *testing.T) {
+	value := FirstOrDefaultWhere(C.EnumerateValues(5, 7, 9, 11), 20, func(x int) bool { return x > 8 })
+
+	if value != 9 {
+		t.Error("should have found 9")
 	}
 }

@@ -30,7 +30,7 @@ func extractPairs[K comparable, V any](m map[K]V) []KeyValuePair[K, V] {
 	return slice
 }
 
-func EnumerateKeys[K comparable, V any](m map[K]V) Enumerable[K] {
+func EnumerateMapKeys[K comparable, V any](m map[K]V) Enumerable[K] {
 	return &FunctionEnumerable[K]{
 		OnGetEnumerator: func() Enumerator[K] {
 			// Extract the keys here so we only do so if the user does enumerate
@@ -41,7 +41,7 @@ func EnumerateKeys[K comparable, V any](m map[K]V) Enumerable[K] {
 	}
 }
 
-func EnumerateValues[K comparable, V any](m map[K]V) Enumerable[V] {
+func EnumerateMapValues[K comparable, V any](m map[K]V) Enumerable[V] {
 	return &FunctionEnumerable[V]{
 		OnGetEnumerator: func() Enumerator[V] {
 			// Extract the keys here so we only do so if the user does enumerate

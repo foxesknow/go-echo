@@ -3,7 +3,7 @@ package linq
 import "github.com/foxesknow/go-echo/data"
 
 // Returns the number of items in the sequence
-func Count[T comparable](stream data.Stream[T]) int {
+func Count[T any](stream data.Stream[T]) int {
 	count := 0
 	for i := stream.Iterator(); i.MoveNext(); {
 		count++

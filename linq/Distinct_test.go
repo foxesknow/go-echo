@@ -3,11 +3,11 @@ package linq
 import (
 	"testing"
 
-	"github.com/foxesknow/go-echo/collections"
+	"github.com/foxesknow/go-echo/data"
 )
 
 func Test_Distinct_Empty(t *testing.T) {
-	distinct := Distinct(collections.EmptyEnumerable[int]())
+	distinct := Distinct(data.EmptyStream[int]())
 	count := Count(distinct)
 	if count != 0 {
 		t.Error("expected zero items")
@@ -15,7 +15,7 @@ func Test_Distinct_Empty(t *testing.T) {
 }
 
 func Test_Distinct(t *testing.T) {
-	numbers := collections.EnumerateSlice([]int{1, 2, 3, 2, 3, 5, 7, 9, 1})
+	numbers := data.StreamSlice([]int{1, 2, 3, 2, 3, 5, 7, 9, 1})
 	distinct := Distinct(numbers)
 
 	count := Count(distinct)

@@ -3,12 +3,12 @@ package linq
 import (
 	"testing"
 
-	"github.com/foxesknow/go-echo/collections"
+	"github.com/foxesknow/go-echo/data"
 )
 
 func Test_All_Empty(t *testing.T) {
 	called := false
-	numbers := collections.EmptyEnumerable[int]()
+	numbers := data.EmptyStream[int]()
 	all := All(numbers, func(x int) bool { called = true; return true })
 
 	if !all {
@@ -22,7 +22,7 @@ func Test_All_Empty(t *testing.T) {
 
 func Test_All(t *testing.T) {
 	callCount := 0
-	numbers := collections.EnumerateSlice([]int{1, 2, 3, 4})
+	numbers := data.StreamSlice([]int{1, 2, 3, 4})
 	all := All(numbers, func(x int) bool { callCount++; return x < 10 })
 
 	if !all {
@@ -36,7 +36,7 @@ func Test_All(t *testing.T) {
 
 func Test_All_Odd(t *testing.T) {
 	callCount := 0
-	numbers := collections.EnumerateSlice([]int{1, 2, 3, 4})
+	numbers := data.StreamSlice([]int{1, 2, 3, 4})
 	all := All(numbers, func(x int) bool { callCount++; return (x & 1) == 1 })
 
 	if all {

@@ -1,12 +1,12 @@
 package linq
 
-import "github.com/foxesknow/go-echo/collections"
+import "github.com/foxesknow/go-echo/data"
 
 // Determines if all items in the sequence satisfy a predicate.
 // If the sequence is empty the true is returned
-func All[T any](enumerable collections.Enumerable[T], predicate func(T) bool) bool {
-	for e := enumerable.GetEnumerator(); e.MoveNext(); {
-		if !predicate(e.Current()) {
+func All[T any](stream data.Stream[T], predicate func(T) bool) bool {
+	for i := stream.Iterator(); i.MoveNext(); {
+		if !predicate(i.Current()) {
 			return false
 		}
 	}

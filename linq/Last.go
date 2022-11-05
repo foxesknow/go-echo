@@ -1,15 +1,15 @@
 package linq
 
 import (
-	"github.com/foxesknow/go-echo/collections"
+	"github.com/foxesknow/go-echo/data"
 )
 
 // Returns the last item in a sequence, or (zero, false) if not found
-func Last[T any](enumerable collections.Enumerable[T]) (item T, found bool) {
+func Last[T any](stream data.Stream[T]) (item T, found bool) {
 	var last T
 	gotSomething := false
-	for e := enumerable.GetEnumerator(); e.MoveNext(); {
-		last = e.Current()
+	for i := stream.Iterator(); i.MoveNext(); {
+		last = i.Current()
 		gotSomething = true
 	}
 
@@ -21,12 +21,12 @@ func Last[T any](enumerable collections.Enumerable[T]) (item T, found bool) {
 	return zero, false
 }
 
-func LastWhere[T any](enumerable collections.Enumerable[T], predicate func(T) bool) (item T, found bool) {
+func LastWhere[T any](stream data.Stream[T], predicate func(T) bool) (item T, found bool) {
 	var last T
 	gotSomething := false
 
-	for e := enumerable.GetEnumerator(); e.MoveNext(); {
-		next := e.Current()
+	for i := stream.Iterator(); i.MoveNext(); {
+		next := i.Current()
 		if predicate(next) {
 			last = next
 			gotSomething = true
@@ -41,16 +41,16 @@ func LastWhere[T any](enumerable collections.Enumerable[T], predicate func(T) bo
 	return zero, false
 }
 
-func LastOrDefault[T any](enumerable collections.Enumerable[T], defaultValue T) T {
-	if item, found := Last(enumerable); found {
+func LastOrDefault[T any](stream data.Stream[T], defaultValue T) T {
+	if item, found := Last(stream); found {
 		return item
 	}
 
 	return defaultValue
 }
 
-func LastOrDefaultWhere[T any](enumerable collections.Enumerable[T], defaultValue T, predicate func(T) bool) T {
-	if item, found := LastWhere(enumerable, predicate); found {
+func LastOrDefaultWhere[T any](stream data.Stream[T], defaultValue T, predicate func(T) bool) T {
+	if item, found := LastWhere(stream, predicate); found {
 		return item
 	}
 

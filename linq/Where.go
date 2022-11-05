@@ -1,23 +1,23 @@
 package linq
 
-import "github.com/foxesknow/go-echo/collections"
+import "github.com/foxesknow/go-echo/data"
 
 // Filters an enumerable based on a predicate.
 // Any items that match the predicate will be returned
-func Where[T any](enumerable collections.Enumerable[T], predicate func(T) bool) collections.Enumerable[T] {
-	return &collections.FunctionEnumerable[T]{
-		OnGetEnumerator: func() collections.Enumerator[T] {
+func Where[T any](stream data.Stream[T], predicate func(T) bool) data.Stream[T] {
+	return &data.FunctionStream[T]{
+		OnIterator: func() data.Iterator[T] {
 			done := false
-			e := enumerable.GetEnumerator()
+			i := stream.Iterator()
 
-			return &collections.FunctionEnumerator[T]{
+			return &data.FunctionIterator[T]{
 				OnMoveNext: func() bool {
 					if done {
 						return done
 					}
 
-					for e.MoveNext() {
-						if predicate(e.Current()) {
+					for i.MoveNext() {
+						if predicate(i.Current()) {
 							return true
 						}
 					}
@@ -26,7 +26,7 @@ func Where[T any](enumerable collections.Enumerable[T], predicate func(T) bool) 
 					return false
 				},
 				OnCurrent: func() T {
-					return e.Current()
+					return i.Current()
 				},
 			}
 		},
@@ -36,22 +36,22 @@ func Where[T any](enumerable collections.Enumerable[T], predicate func(T) bool) 
 // Filters an enumerable based on a predicate.
 // Any items that match the predicate will be returned.
 // The predicate receives the value to test as well as the index of the item in the source data.
-func WhereIndex[T any](enumerable collections.Enumerable[T], predicate func(T, int) bool) collections.Enumerable[T] {
-	return &collections.FunctionEnumerable[T]{
-		OnGetEnumerator: func() collections.Enumerator[T] {
+func WhereIndex[T any](stream data.Stream[T], predicate func(T, int) bool) data.Stream[T] {
+	return &data.FunctionStream[T]{
+		OnIterator: func() data.Iterator[T] {
 			done := false
-			e := enumerable.GetEnumerator()
+			i := stream.Iterator()
 			index := -1
 
-			return &collections.FunctionEnumerator[T]{
+			return &data.FunctionIterator[T]{
 				OnMoveNext: func() bool {
 					if done {
 						return done
 					}
 
-					for e.MoveNext() {
+					for i.MoveNext() {
 						index++
-						if predicate(e.Current(), index) {
+						if predicate(i.Current(), index) {
 							return true
 						}
 
@@ -61,7 +61,7 @@ func WhereIndex[T any](enumerable collections.Enumerable[T], predicate func(T, i
 					return false
 				},
 				OnCurrent: func() T {
-					return e.Current()
+					return i.Current()
 				},
 			}
 		},

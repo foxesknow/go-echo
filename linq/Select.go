@@ -1,20 +1,20 @@
 package linq
 
-import "github.com/foxesknow/go-echo/collections"
+import "github.com/foxesknow/go-echo/data"
 
-func Select[T any, V any](enumerable collections.Enumerable[T], projection func(T) V) collections.Enumerable[V] {
-	return &collections.FunctionEnumerable[V]{
-		OnGetEnumerator: func() collections.Enumerator[V] {
+func Select[T any, V any](stream data.Stream[T], projection func(T) V) data.Stream[V] {
+	return &data.FunctionStream[V]{
+		OnIterator: func() data.Iterator[V] {
 			done := false
-			e := enumerable.GetEnumerator()
+			i := stream.Iterator()
 
-			return &collections.FunctionEnumerator[V]{
+			return &data.FunctionIterator[V]{
 				OnMoveNext: func() bool {
 					if done {
 						return done
 					}
 
-					if e.MoveNext() {
+					if i.MoveNext() {
 						return true
 					}
 
@@ -22,27 +22,27 @@ func Select[T any, V any](enumerable collections.Enumerable[T], projection func(
 					return false
 				},
 				OnCurrent: func() V {
-					return projection(e.Current())
+					return projection(i.Current())
 				},
 			}
 		},
 	}
 }
 
-func SelectIndex[T any, V any](enumerable collections.Enumerable[T], projection func(T, int) V) collections.Enumerable[V] {
-	return &collections.FunctionEnumerable[V]{
-		OnGetEnumerator: func() collections.Enumerator[V] {
+func SelectIndex[T any, V any](stream data.Stream[T], projection func(T, int) V) data.Stream[V] {
+	return &data.FunctionStream[V]{
+		OnIterator: func() data.Iterator[V] {
 			done := false
-			e := enumerable.GetEnumerator()
+			i := stream.Iterator()
 			index := -1
 
-			return &collections.FunctionEnumerator[V]{
+			return &data.FunctionIterator[V]{
 				OnMoveNext: func() bool {
 					if done {
 						return done
 					}
 
-					if e.MoveNext() {
+					if i.MoveNext() {
 						index++
 						return true
 					}
@@ -51,7 +51,7 @@ func SelectIndex[T any, V any](enumerable collections.Enumerable[T], projection 
 					return false
 				},
 				OnCurrent: func() V {
-					return projection(e.Current(), index)
+					return projection(i.Current(), index)
 				},
 			}
 		},

@@ -1,11 +1,11 @@
 package linq
 
-import "github.com/foxesknow/go-echo/collections"
+import "github.com/foxesknow/go-echo/data"
 
 // Returns the number of items in the sequence
-func Count[T comparable](enumerable collections.Enumerable[T]) int {
+func Count[T comparable](stream data.Stream[T]) int {
 	count := 0
-	for e := enumerable.GetEnumerator(); e.MoveNext(); {
+	for i := stream.Iterator(); i.MoveNext(); {
 		count++
 	}
 
@@ -13,10 +13,10 @@ func Count[T comparable](enumerable collections.Enumerable[T]) int {
 }
 
 // Returns the number of items in the sequence that match the given predicate
-func CountWhere[T any](enumerable collections.Enumerable[T], predicate func(T) bool) int {
+func CountWhere[T any](stream data.Stream[T], predicate func(T) bool) int {
 	count := 0
-	for e := enumerable.GetEnumerator(); e.MoveNext(); {
-		if predicate(e.Current()) {
+	for i := stream.Iterator(); i.MoveNext(); {
+		if predicate(i.Current()) {
 			count++
 		}
 	}

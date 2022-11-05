@@ -1,15 +1,15 @@
 package linq
 
-import "github.com/foxesknow/go-echo/collections"
+import "github.com/foxesknow/go-echo/data"
 
-func Concat[T any](lhs, rhs collections.Enumerable[T]) collections.Enumerable[T] {
-	return &collections.FunctionEnumerable[T]{
-		OnGetEnumerator: func() collections.Enumerator[T] {
+func Concat[T any](lhs, rhs data.Stream[T]) data.Stream[T] {
+	return &data.FunctionStream[T]{
+		OnIterator: func() data.Iterator[T] {
 			state := 0
-			l := lhs.GetEnumerator()
-			r := rhs.GetEnumerator()
+			l := lhs.Iterator()
+			r := rhs.Iterator()
 
-			return &collections.FunctionEnumerator[T]{
+			return &data.FunctionIterator[T]{
 				OnMoveNext: func() bool {
 					switch state {
 					case 0:

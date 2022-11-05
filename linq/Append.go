@@ -1,22 +1,22 @@
 package linq
 
-import "github.com/foxesknow/go-echo/collections"
+import "github.com/foxesknow/go-echo/data"
 
-func Append[T any](enumerable collections.Enumerable[T], item T) collections.Enumerable[T] {
-	return &collections.FunctionEnumerable[T]{
-		OnGetEnumerator: func() collections.Enumerator[T] {
+func Append[T any](stream data.Stream[T], item T) data.Stream[T] {
+	return &data.FunctionStream[T]{
+		OnIterator: func() data.Iterator[T] {
 			var current T
 			done := false
-			e := enumerable.GetEnumerator()
+			i := stream.Iterator()
 
-			return &collections.FunctionEnumerator[T]{
+			return &data.FunctionIterator[T]{
 				OnMoveNext: func() bool {
 					if done {
 						return false
 					}
 
-					if e.MoveNext() {
-						current = e.Current()
+					if i.MoveNext() {
+						current = i.Current()
 						return true
 					}
 

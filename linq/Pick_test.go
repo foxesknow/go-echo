@@ -3,11 +3,11 @@ package linq
 import (
 	"testing"
 
-	C "github.com/foxesknow/go-echo/collections"
+	"github.com/foxesknow/go-echo/data"
 )
 
 func Test_Pick_Max_Empty(t *testing.T) {
-	numbers := C.EnumerateValues[int]()
+	numbers := data.StreamValues[int]()
 
 	max, found := Pick(numbers, func(candidate, current int) bool { return candidate > current })
 
@@ -21,7 +21,7 @@ func Test_Pick_Max_Empty(t *testing.T) {
 }
 
 func Test_Pick_Max(t *testing.T) {
-	numbers := C.EnumerateValues(8, 1, 78, 31, 2, 7, 11)
+	numbers := data.StreamValues(8, 1, 78, 31, 2, 7, 11)
 
 	max, found := Pick(numbers, func(candidate, current int) bool { return candidate > current })
 
@@ -35,7 +35,7 @@ func Test_Pick_Max(t *testing.T) {
 }
 
 func Test_Pick_Max_One_Item(t *testing.T) {
-	numbers := C.EnumerateValues(8)
+	numbers := data.StreamValues(8)
 
 	max, found := Pick(numbers, func(candidate, current int) bool { return candidate > current })
 
@@ -49,7 +49,7 @@ func Test_Pick_Max_One_Item(t *testing.T) {
 }
 
 func Test_Pick_Min(t *testing.T) {
-	numbers := C.EnumerateValues(8, 1, 78, 31, 2, 7, 11)
+	numbers := data.StreamValues(8, 1, 78, 31, 2, 7, 11)
 
 	max, found := Pick(numbers, func(candidate, current int) bool { return candidate < current })
 

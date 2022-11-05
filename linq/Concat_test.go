@@ -3,12 +3,12 @@ package linq
 import (
 	"testing"
 
-	"github.com/foxesknow/go-echo/collections"
+	"github.com/foxesknow/go-echo/data"
 )
 
 func Test_Concat(t *testing.T) {
-	lhs := collections.EnumerateSlice([]int{0, 1, 2, 3, 4})
-	rhs := collections.EnumerateSlice([]int{99, 100})
+	lhs := data.StreamSlice([]int{0, 1, 2, 3, 4})
+	rhs := data.StreamSlice([]int{99, 100})
 	concat := ToSlice(Concat(lhs, rhs))
 
 	if len(concat) != 7 {

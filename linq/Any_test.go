@@ -3,11 +3,11 @@ package linq
 import (
 	"testing"
 
-	"github.com/foxesknow/go-echo/collections"
+	"github.com/foxesknow/go-echo/data"
 )
 
 func Test_Any_Empty(t *testing.T) {
-	empty := collections.EmptyEnumerable[int]()
+	empty := data.EmptyStream[int]()
 
 	if Any(empty) {
 		t.Error("Any should be false for an empty sequence")
@@ -15,7 +15,7 @@ func Test_Any_Empty(t *testing.T) {
 }
 
 func Test_Any(t *testing.T) {
-	numbers := collections.EnumerateSlice([]int{1, 2, 3, 4})
+	numbers := data.StreamSlice([]int{1, 2, 3, 4})
 
 	if !Any(numbers) {
 		t.Error("Any should be true for a non-empty sequence")
@@ -24,7 +24,7 @@ func Test_Any(t *testing.T) {
 
 func Test_AnyWhere_Empty(t *testing.T) {
 	called := false
-	empty := collections.EmptyEnumerable[int]()
+	empty := data.EmptyStream[int]()
 	any := AnyWhere(empty, func(x int) bool { called = true; return true })
 
 	if any {
@@ -38,7 +38,7 @@ func Test_AnyWhere_Empty(t *testing.T) {
 
 func Test_AnyWhere(t *testing.T) {
 	callCount := 0
-	numbers := collections.EnumerateSlice([]int{1, 2, 3, 4})
+	numbers := data.StreamSlice([]int{1, 2, 3, 4})
 	any := AnyWhere(numbers, func(x int) bool { callCount++; return x < 10 })
 
 	if !any {
@@ -52,7 +52,7 @@ func Test_AnyWhere(t *testing.T) {
 
 func Test_AnyWhere_NoMatch(t *testing.T) {
 	callCount := 0
-	numbers := collections.EnumerateSlice([]int{1, 2, 3, 4})
+	numbers := data.StreamSlice([]int{1, 2, 3, 4})
 	any := AnyWhere(numbers, func(x int) bool { callCount++; return x > 20 })
 
 	if any {

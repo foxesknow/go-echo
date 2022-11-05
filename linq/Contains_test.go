@@ -3,11 +3,11 @@ package linq
 import (
 	"testing"
 
-	"github.com/foxesknow/go-echo/collections"
+	"github.com/foxesknow/go-echo/data"
 )
 
 func Test_Contains_Empty(t *testing.T) {
-	empty := collections.EmptyEnumerable[int]()
+	empty := data.EmptyStream[int]()
 	if found, _ := Contains(empty, 10); found {
 		t.Error("should not have found anything")
 	}
@@ -18,7 +18,7 @@ func Test_Contains_Empty(t *testing.T) {
 }
 
 func Test_Contains(t *testing.T) {
-	values := collections.EnumerateValues(3, 5, 7, 9)
+	values := data.StreamValues(3, 5, 7, 9)
 	if found, _ := Contains(values, 10); found {
 		t.Error("should not have found anything")
 	}
@@ -29,7 +29,7 @@ func Test_Contains(t *testing.T) {
 }
 
 func Test_Contains_Not_Found(t *testing.T) {
-	values := collections.EnumerateValues(3, 5, 7, 9)
+	values := data.StreamValues(3, 5, 7, 9)
 
 	if found, index := Contains(values, 20); found || index != -1 {
 		t.Error("should not have found anything")
@@ -37,7 +37,7 @@ func Test_Contains_Not_Found(t *testing.T) {
 }
 
 func Test_ContainsWhere_Empty(t *testing.T) {
-	empty := collections.EmptyEnumerable[int]()
+	empty := data.EmptyStream[int]()
 	if found, _ := ContainsWhere(empty, func(x int) bool { return x == 1 }); found {
 		t.Error("should not have found anything")
 	}
@@ -48,7 +48,7 @@ func Test_ContainsWhere_Empty(t *testing.T) {
 }
 
 func Test_ContainsWhere(t *testing.T) {
-	values := collections.EnumerateValues(3, 5, 7, 9)
+	values := data.StreamValues(3, 5, 7, 9)
 	if found, _ := ContainsWhere(values, func(x int) bool { return x < 0 }); found {
 		t.Error("should not have found anything")
 	}

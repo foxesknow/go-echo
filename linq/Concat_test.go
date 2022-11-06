@@ -7,8 +7,8 @@ import (
 )
 
 func Test_Concat(t *testing.T) {
-	lhs := data.StreamSlice([]int{0, 1, 2, 3, 4})
-	rhs := data.StreamSlice([]int{99, 100})
+	lhs := data.FromSlice([]int{0, 1, 2, 3, 4})
+	rhs := data.FromSlice([]int{99, 100})
 	concat := ToSlice(Concat(lhs, rhs))
 
 	if len(concat) != 7 {

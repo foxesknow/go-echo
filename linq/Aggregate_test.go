@@ -15,7 +15,7 @@ func Test_Aggregate_Empty(t *testing.T) {
 }
 
 func Test_Aggregate_NonEmpty(t *testing.T) {
-	data := data.StreamSlice([]int{1, 2, 3, 4})
+	data := data.FromSlice([]int{1, 2, 3, 4})
 	agg := Aggregate(data, 0, func(acc, x int) int { return acc + x })
 	if agg != 10 {
 		t.Error("expected 10")
@@ -23,7 +23,7 @@ func Test_Aggregate_NonEmpty(t *testing.T) {
 }
 
 func Test_Aggregate_String(t *testing.T) {
-	data := data.StreamSlice([]string{"h", "e", "l", "l", "o"})
+	data := data.FromSlice([]string{"h", "e", "l", "l", "o"})
 	agg := Aggregate(data, "", func(acc, x string) string { return acc + x })
 	if agg != "hello" {
 		t.Error("expected hello")

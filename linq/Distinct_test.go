@@ -15,7 +15,7 @@ func Test_Distinct_Empty(t *testing.T) {
 }
 
 func Test_Distinct(t *testing.T) {
-	numbers := data.StreamSlice([]int{1, 2, 3, 2, 3, 5, 7, 9, 1})
+	numbers := data.FromSlice([]int{1, 2, 3, 2, 3, 5, 7, 9, 1})
 	distinct := Distinct(numbers)
 
 	count := Count(distinct)

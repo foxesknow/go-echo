@@ -8,7 +8,7 @@ import (
 
 func Test_Append(t *testing.T) {
 	initial := []int{0, 1, 2, 3, 4}
-	initialEnum := data.StreamSlice(initial)
+	initialEnum := data.FromSlice(initial)
 	appendedEnum := Append(initialEnum, 5)
 	slice := ToSlice(appendedEnum)
 
@@ -31,7 +31,7 @@ func Test_Append(t *testing.T) {
 
 func Test_Append_BeyondCapacity(t *testing.T) {
 	initial := []int{0, 1, 2, 3, 4, 5, 6, 7}
-	initialEnum := data.StreamSlice(initial)
+	initialEnum := data.FromSlice(initial)
 	appendedEnum := Append(initialEnum, 8)
 	slice := ToSlice(appendedEnum)
 

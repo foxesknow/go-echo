@@ -83,3 +83,33 @@ func Test_Repeat(t *testing.T) {
 		t.Error("There shouldn't be any more data")
 	}
 }
+
+func Test_FromChannel(t *testing.T) {
+	channel := make(chan int)
+	stop := make(chan bool)
+
+	go func() {
+		channel <- 1
+		channel <- 2
+		channel <- 3
+		channel <- 4
+
+		<-stop
+	}()
+
+	sum := 0
+	stream := FromChannel(channel)
+	for i := stream.Iterator(); i.MoveNext(); {
+		current := i.Current()
+		sum += current
+
+		if current == 4 {
+			stop <- true
+			close(channel)
+		}
+	}
+
+	if sum != 10 {
+		t.Error("not all data made it through")
+	}
+}

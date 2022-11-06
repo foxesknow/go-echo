@@ -27,10 +27,10 @@ func (self *sliceStream[T]) Iterator() Iterator[T] {
 
 }
 
-func StreamSlice[T any](slice []T) Stream[T] {
+func FromSlice[T any](slice []T) Stream[T] {
 	return &sliceStream[T]{slice: slice}
 }
 
-func StreamValues[T any](values ...T) Stream[T] {
+func FromValues[T any](values ...T) Stream[T] {
 	return &sliceStream[T]{slice: values}
 }

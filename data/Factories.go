@@ -71,3 +71,29 @@ func Repeat[T any](item T, count int) Stream[T] {
 		},
 	}
 }
+
+// Enumerates over data received from a channel until the channel is closed
+func FromChannel[T any](channel chan T) Stream[T] {
+	return &FunctionStream[T]{
+		OnIterator: func() Iterator[T] {
+			var current T
+
+			return &FunctionIterator[T]{
+				OnMoveNext: func() bool {
+					item, ok := <-channel
+					if ok {
+						current = item
+						return true
+					}
+
+					var zero T
+					current = zero
+					return false
+				},
+				OnCurrent: func() T {
+					return current
+				},
+			}
+		},
+	}
+}

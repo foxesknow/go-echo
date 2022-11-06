@@ -34,7 +34,7 @@ func extractPairs[K comparable, V any](m map[K]V) []C.KeyValuePair[K, V] {
 	return slice
 }
 
-func StreamMapKeys[K comparable, V any](m map[K]V) Stream[K] {
+func FromMapKeys[K comparable, V any](m map[K]V) Stream[K] {
 	return &FunctionStream[K]{
 		OnIterator: func() Iterator[K] {
 			// Extract the keys here so we only do so if the user does enumerate
@@ -45,7 +45,7 @@ func StreamMapKeys[K comparable, V any](m map[K]V) Stream[K] {
 	}
 }
 
-func StreamMapValues[K comparable, V any](m map[K]V) Stream[V] {
+func FromMapValues[K comparable, V any](m map[K]V) Stream[V] {
 	return &FunctionStream[V]{
 		OnIterator: func() Iterator[V] {
 			// Extract the keys here so we only do so if the user does enumerate
@@ -56,7 +56,7 @@ func StreamMapValues[K comparable, V any](m map[K]V) Stream[V] {
 	}
 }
 
-func EnumerateKeyValuePairs[K comparable, V any](m map[K]V) Stream[C.KeyValuePair[K, V]] {
+func FromMap[K comparable, V any](m map[K]V) Stream[C.KeyValuePair[K, V]] {
 	return &FunctionStream[C.KeyValuePair[K, V]]{
 		OnIterator: func() Iterator[C.KeyValuePair[K, V]] {
 			// Extract the keys here so we only do so if the user does enumerate

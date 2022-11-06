@@ -22,7 +22,7 @@ func Test_All_Empty(t *testing.T) {
 
 func Test_All(t *testing.T) {
 	callCount := 0
-	numbers := data.StreamSlice([]int{1, 2, 3, 4})
+	numbers := data.FromSlice([]int{1, 2, 3, 4})
 	all := All(numbers, func(x int) bool { callCount++; return x < 10 })
 
 	if !all {
@@ -36,7 +36,7 @@ func Test_All(t *testing.T) {
 
 func Test_All_Odd(t *testing.T) {
 	callCount := 0
-	numbers := data.StreamSlice([]int{1, 2, 3, 4})
+	numbers := data.FromSlice([]int{1, 2, 3, 4})
 	all := All(numbers, func(x int) bool { callCount++; return (x & 1) == 1 })
 
 	if all {

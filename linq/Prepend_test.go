@@ -8,7 +8,7 @@ import (
 
 func Test_Prepend(t *testing.T) {
 	initial := []int{1, 2, 3, 4, 5}
-	initialEnum := data.StreamSlice(initial)
+	initialEnum := data.FromSlice(initial)
 	appendedEnum := Prepend(initialEnum, 0)
 	slice := ToSlice(appendedEnum)
 

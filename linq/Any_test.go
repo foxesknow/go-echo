@@ -15,7 +15,7 @@ func Test_Any_Empty(t *testing.T) {
 }
 
 func Test_Any(t *testing.T) {
-	numbers := data.StreamSlice([]int{1, 2, 3, 4})
+	numbers := data.FromSlice([]int{1, 2, 3, 4})
 
 	if !Any(numbers) {
 		t.Error("Any should be true for a non-empty sequence")
@@ -38,7 +38,7 @@ func Test_AnyWhere_Empty(t *testing.T) {
 
 func Test_AnyWhere(t *testing.T) {
 	callCount := 0
-	numbers := data.StreamSlice([]int{1, 2, 3, 4})
+	numbers := data.FromSlice([]int{1, 2, 3, 4})
 	any := AnyWhere(numbers, func(x int) bool { callCount++; return x < 10 })
 
 	if !any {
@@ -52,7 +52,7 @@ func Test_AnyWhere(t *testing.T) {
 
 func Test_AnyWhere_NoMatch(t *testing.T) {
 	callCount := 0
-	numbers := data.StreamSlice([]int{1, 2, 3, 4})
+	numbers := data.FromSlice([]int{1, 2, 3, 4})
 	any := AnyWhere(numbers, func(x int) bool { callCount++; return x > 20 })
 
 	if any {

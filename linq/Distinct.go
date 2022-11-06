@@ -21,7 +21,7 @@ func Distinct[T comparable](stream data.Stream[T]) data.Stream[T] {
 				}
 			}
 
-			return data.StreamSlice(items).Iterator()
+			return data.FromSlice(items).Iterator()
 		},
 	}
 }

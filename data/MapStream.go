@@ -28,7 +28,7 @@ func extractPairs[K comparable, V any](m map[K]V) []C.KeyValuePair[K, V] {
 	slice := make([]C.KeyValuePair[K, V], len(m))
 
 	for k, v := range m {
-		slice = append(slice, C.KeyValuePair[K, V]{k, v})
+		slice = append(slice, C.KeyValuePair[K, V]{Key: k, Value: v})
 	}
 
 	return slice

@@ -73,7 +73,7 @@ func Repeat[T any](item T, count int) Stream[T] {
 }
 
 // Enumerates over data received from a channel until the channel is closed
-func FromChannel[T any](channel chan T) Stream[T] {
+func FromChannel[T any](channel <-chan T) Stream[T] {
 	return &FunctionStream[T]{
 		OnIterator: func() Iterator[T] {
 			var current T
@@ -97,3 +97,5 @@ func FromChannel[T any](channel chan T) Stream[T] {
 		},
 	}
 }
+
+// TODO: Add FromChannel overload that take a "stop" channel

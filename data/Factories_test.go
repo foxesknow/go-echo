@@ -86,15 +86,13 @@ func Test_Repeat(t *testing.T) {
 
 func Test_FromChannel(t *testing.T) {
 	channel := make(chan int)
-	stop := make(chan bool)
 
 	go func() {
 		channel <- 1
 		channel <- 2
 		channel <- 3
 		channel <- 4
-
-		<-stop
+		close(channel)
 	}()
 
 	sum := 0
@@ -104,8 +102,34 @@ func Test_FromChannel(t *testing.T) {
 		sum += current
 
 		if current == 4 {
-			stop <- true
-			close(channel)
+			break
+		}
+	}
+
+	if sum != 10 {
+		t.Error("not all data made it through")
+	}
+}
+
+func Test_FromChannel_CloseBeforeAllRead(t *testing.T) {
+	channel := make(chan int)
+
+	go func() {
+		channel <- 1
+		channel <- 2
+		channel <- 3
+		channel <- 4
+		close(channel)
+	}()
+
+	sum := 0
+	stream := FromChannel(channel)
+	for i := stream.Iterator(); i.MoveNext(); {
+		current := i.Current()
+		sum += current
+
+		if current == 5 {
+			break
 		}
 	}
 

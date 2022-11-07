@@ -27,10 +27,12 @@ func (self *sliceStream[T]) Iterator() Iterator[T] {
 
 }
 
+// Returns a stream for a slice
 func FromSlice[T any](slice []T) Stream[T] {
 	return &sliceStream[T]{slice: slice}
 }
 
+// Returns a stream for a range of values
 func FromValues[T any](values ...T) Stream[T] {
 	return &sliceStream[T]{slice: values}
 }

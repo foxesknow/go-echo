@@ -9,7 +9,8 @@ func Any[T any](stream data.Stream[T]) bool {
 }
 
 // Returns true if the sequence is not empty and at least one item
-// matches the predicate, otherwise false
+// matches the predicate, otherwise false.
+// This method is implemented by using deferred execution.
 func AnyWhere[T any](stream data.Stream[T], predicate func(T) bool) bool {
 	for i := stream.Iterator(); i.MoveNext(); {
 		if predicate(i.Current()) {

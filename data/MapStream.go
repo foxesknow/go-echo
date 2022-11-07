@@ -34,6 +34,7 @@ func extractPairs[K comparable, V any](m map[K]V) []C.KeyValuePair[K, V] {
 	return slice
 }
 
+// Returns a stream for the keys in a map
 func FromMapKeys[K comparable, V any](m map[K]V) Stream[K] {
 	return &FunctionStream[K]{
 		OnIterator: func() Iterator[K] {
@@ -45,6 +46,7 @@ func FromMapKeys[K comparable, V any](m map[K]V) Stream[K] {
 	}
 }
 
+// Returns a stream for the values in a map
 func FromMapValues[K comparable, V any](m map[K]V) Stream[V] {
 	return &FunctionStream[V]{
 		OnIterator: func() Iterator[V] {
@@ -56,6 +58,7 @@ func FromMapValues[K comparable, V any](m map[K]V) Stream[V] {
 	}
 }
 
+// Returns a stream for the key/value pairs in a map
 func FromMap[K comparable, V any](m map[K]V) Stream[C.KeyValuePair[K, V]] {
 	return &FunctionStream[C.KeyValuePair[K, V]]{
 		OnIterator: func() Iterator[C.KeyValuePair[K, V]] {

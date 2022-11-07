@@ -2,9 +2,9 @@ package linq
 
 import "github.com/foxesknow/go-echo/data"
 
-// Applies an accumulator over a sequence.
-// The seed is used as the inital value and the accumulator function is called once for each item
-// to combine the current item in the sequence with the current aggregate value
+// Returns the item at the specified index within a sequence
+// Returns (item, true) if found.
+// If the item is not found, or index is less than zero then (zero, false) is returned
 func ElementAt[T any](stream data.Stream[T], index int) (item T, found bool) {
 	if index < 0 {
 		return
@@ -20,6 +20,8 @@ func ElementAt[T any](stream data.Stream[T], index int) (item T, found bool) {
 	return
 }
 
+// Returns the item at the specified index within a sequence.
+// If the index does not exist, or is invalid, then the default value is returned.
 func ElementAtOrDefault[T any](stream data.Stream[T], index int, defaultValue T) T {
 	if item, found := ElementAt(stream, index); found {
 		return item

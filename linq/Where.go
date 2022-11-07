@@ -3,7 +3,8 @@ package linq
 import "github.com/foxesknow/go-echo/data"
 
 // Filters an enumerable based on a predicate.
-// Any items that match the predicate will be returned
+// Any items that match the predicate will be returned.
+// This method is implemented by using deferred execution
 func Where[T any](stream data.Stream[T], predicate func(T) bool) data.Stream[T] {
 	return &data.FunctionStream[T]{
 		OnIterator: func() data.Iterator[T] {
@@ -36,6 +37,7 @@ func Where[T any](stream data.Stream[T], predicate func(T) bool) data.Stream[T] 
 // Filters an enumerable based on a predicate.
 // Any items that match the predicate will be returned.
 // The predicate receives the value to test as well as the index of the item in the source data.
+// This method is implemented by using deferred execution
 func WhereIndex[T any](stream data.Stream[T], predicate func(T, int) bool) data.Stream[T] {
 	return &data.FunctionStream[T]{
 		OnIterator: func() data.Iterator[T] {

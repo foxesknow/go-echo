@@ -2,6 +2,8 @@ package linq
 
 import "github.com/foxesknow/go-echo/data"
 
+// Appends a value to the end of a sequence.
+// This method is implemented by using deferred execution.
 func Append[T any](stream data.Stream[T], item T) data.Stream[T] {
 	return &data.FunctionStream[T]{
 		OnIterator: func() data.Iterator[T] {

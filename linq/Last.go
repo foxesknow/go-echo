@@ -21,6 +21,8 @@ func Last[T any](stream data.Stream[T]) (item T, found bool) {
 	return zero, false
 }
 
+// Returns the last item in a sequence that matches the predicate
+// or (zero, false) if not found
 func LastWhere[T any](stream data.Stream[T], predicate func(T) bool) (item T, found bool) {
 	var last T
 	gotSomething := false
@@ -41,6 +43,8 @@ func LastWhere[T any](stream data.Stream[T], predicate func(T) bool) (item T, fo
 	return zero, false
 }
 
+// Returns the last item in a sequence, or the specified
+// default if the sequence is empty
 func LastOrDefault[T any](stream data.Stream[T], defaultValue T) T {
 	if item, found := Last(stream); found {
 		return item
@@ -49,6 +53,8 @@ func LastOrDefault[T any](stream data.Stream[T], defaultValue T) T {
 	return defaultValue
 }
 
+// Returns the last item in the sequence which matches the specified predicate,
+// or the specified default if none is found
 func LastOrDefaultWhere[T any](stream data.Stream[T], defaultValue T, predicate func(T) bool) T {
 	if item, found := LastWhere(stream, predicate); found {
 		return item

@@ -1,5 +1,7 @@
 package data
 
+import "context"
+
 // Generates a stream of data by calling a generator function
 func Generate[T any](generator func() (value T, keepGoing bool)) Stream[T] {
 	return &FunctionStream[T]{
@@ -49,6 +51,7 @@ func Range(start, count int) Stream[int] {
 	}
 }
 
+// Returns a sequence that will yield "item" the specified number of times
 func Repeat[T any](item T, count int) Stream[T] {
 	return &FunctionStream[T]{
 		OnIterator: func() Iterator[T] {
@@ -98,4 +101,34 @@ func FromChannel[T any](channel <-chan T) Stream[T] {
 	}
 }
 
-// TODO: Add FromChannel overload that take a "stop" channel
+// Creates a stream from a channel and supports cancellation via a context
+func FromChannelWithContext[T any](channel <-chan T, cancel context.Context) Stream[T] {
+	return &FunctionStream[T]{
+		OnIterator: func() Iterator[T] {
+			var current T
+			var done bool
+
+			return &FunctionIterator[T]{
+				OnMoveNext: func() bool {
+					if done {
+						return false
+					}
+
+					select {
+					case <-cancel.Done():
+						var zero T
+						current = zero
+						done = true
+						return false
+
+					case current = <-channel:
+						return true
+					}
+				},
+				OnCurrent: func() T {
+					return current
+				},
+			}
+		},
+	}
+}

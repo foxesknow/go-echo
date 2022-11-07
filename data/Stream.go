@@ -1,8 +1,8 @@
 package data
 
-// Indicates that a type is enumerable
+// Indicates that a type can stream the values it contains
 type Stream[T any] interface {
-	// Create an enumerator
+	// Create an iterator to the values in the stream
 	Iterator() Iterator[T]
 }
 
@@ -14,7 +14,7 @@ type Iterator[T any] interface {
 	Current() T
 }
 
-// Allows an enumerable to be created by calling a factory function
+// Allows an stream to be created by calling a factory function
 type FunctionStream[T any] struct {
 	OnIterator func() Iterator[T]
 }
@@ -23,7 +23,7 @@ func (self *FunctionStream[T]) Iterator() Iterator[T] {
 	return self.OnIterator()
 }
 
-// Defers enumerator calls to functions
+// Defers iterator calls to functions
 type FunctionIterator[T any] struct {
 	OnMoveNext func() bool
 	OnCurrent  func() T
@@ -37,6 +37,7 @@ func (self *FunctionIterator[T]) Current() T {
 	return self.OnCurrent()
 }
 
+// Returns a stream that contains nothing
 func EmptyStream[T any]() Stream[T] {
 	return &FunctionStream[T]{
 		OnIterator: func() Iterator[T] {

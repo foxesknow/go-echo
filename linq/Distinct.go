@@ -6,6 +6,7 @@ import (
 
 // Returns distinct items from a sequence.
 // Do not make any assumptions about the order of the returned sequence.
+// This method is implemented by using deferred execution.
 func Distinct[T comparable](stream data.Stream[T]) data.Stream[T] {
 	return &data.FunctionStream[T]{
 		OnIterator: func() data.Iterator[T] {

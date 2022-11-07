@@ -2,30 +2,34 @@ package linq
 
 import "github.com/foxesknow/go-echo/data"
 
-// Adds an item to the fromt of the sequence
+// Reverses the order of a sequence in reverse.
+// Once you start iterating over the sequence is converted to a slice and iterated over.
 // This method is implemented by using deferred execution.
-func Prepend[T any](stream data.Stream[T], item T) data.Stream[T] {
+func Reverse[T any](stream data.Stream[T]) data.Stream[T] {
 	return &data.FunctionStream[T]{
 		OnIterator: func() data.Iterator[T] {
-			var current T
-			i := stream.Iterator()
+			next := 0
 			state := 0
+			var slice []T
 
 			return &data.FunctionIterator[T]{
 				OnMoveNext: func() bool {
 					switch state {
 					case 0:
-						current = item
+						slice = ToSlice(stream)
+						next = len(slice)
 						state = 1
-						return true
+						fallthrough
 
 					case 1:
-						if i.MoveNext() {
-							current = i.Current()
-							return true
+						next--
+
+						if next < 0 {
+							state = -1
+							return false
 						}
 
-						state = -1
+						return true
 
 					default:
 						break
@@ -34,7 +38,7 @@ func Prepend[T any](stream data.Stream[T], item T) data.Stream[T] {
 					return false
 				},
 				OnCurrent: func() T {
-					return current
+					return slice[next]
 				},
 			}
 		},

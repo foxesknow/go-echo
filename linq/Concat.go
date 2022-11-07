@@ -2,6 +2,8 @@ package linq
 
 import "github.com/foxesknow/go-echo/data"
 
+// Concatenates two sequences.
+// This method is implemented by using deferred execution.
 func Concat[T any](lhs, rhs data.Stream[T]) data.Stream[T] {
 	return &data.FunctionStream[T]{
 		OnIterator: func() data.Iterator[T] {

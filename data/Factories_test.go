@@ -1,6 +1,7 @@
 package data
 
 import (
+	"context"
 	"testing"
 )
 
@@ -131,6 +132,31 @@ func Test_FromChannel_CloseBeforeAllRead(t *testing.T) {
 		if current == 5 {
 			break
 		}
+	}
+
+	if sum != 10 {
+		t.Error("not all data made it through")
+	}
+}
+
+func Test_FromChannelWithContext(t *testing.T) {
+	channel := make(chan int)
+
+	ctx, cancel := context.WithCancel(context.Background())
+
+	go func() {
+		channel <- 1
+		channel <- 2
+		channel <- 3
+		channel <- 4
+		cancel()
+	}()
+
+	sum := 0
+	stream := FromChannelWithContext(channel, ctx)
+	for i := stream.Iterator(); i.MoveNext(); {
+		current := i.Current()
+		sum += current
 	}
 
 	if sum != 10 {

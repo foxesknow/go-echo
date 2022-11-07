@@ -5,6 +5,16 @@ import "github.com/foxesknow/go-echo/data"
 // Concatenates two sequences.
 // This method is implemented by using deferred execution.
 func Concat[T any](lhs, rhs data.Stream[T]) data.Stream[T] {
+	// If the left side is empty then it's just the right side...
+	if collection, ok := lhs.(data.Collection); ok && collection.Count() == 0 {
+		return rhs
+	}
+
+	// ...whereas if the right side is empty it's the left side
+	if collection, ok := rhs.(data.Collection); ok && collection.Count() == 0 {
+		return lhs
+	}
+
 	return &data.FunctionStream[T]{
 		OnIterator: func() data.Iterator[T] {
 			state := 0

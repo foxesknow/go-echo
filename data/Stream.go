@@ -37,19 +37,30 @@ func (self *FunctionIterator[T]) Current() T {
 	return self.OnCurrent()
 }
 
+type emptyStream[T any] struct {
+}
+
+func (self *emptyStream[T]) Iterator() Iterator[T] {
+	return &emptyIterator[T]{}
+}
+
+func (self *emptyStream[T]) Count() int {
+	return 0
+}
+
+type emptyIterator[T any] struct {
+}
+
+func (self *emptyIterator[T]) MoveNext() bool {
+	return false
+}
+
+func (self *emptyIterator[T]) Current() T {
+	var zero T
+	return zero
+}
+
 // Returns a stream that contains nothing
 func EmptyStream[T any]() Stream[T] {
-	return &FunctionStream[T]{
-		OnIterator: func() Iterator[T] {
-			return &FunctionIterator[T]{
-				OnMoveNext: func() bool {
-					return false
-				},
-				OnCurrent: func() T {
-					var value T
-					return value
-				},
-			}
-		},
-	}
+	return &emptyStream[T]{}
 }

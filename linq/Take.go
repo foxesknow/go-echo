@@ -3,9 +3,12 @@ package linq
 import "github.com/foxesknow/go-echo/data"
 
 // Returns the specified number of items from a sequence.
-// Once the predicate returns false the remaining items are skipped.
 // This method is implemented by using deferred execution.
 func Take[T any](stream data.Stream[T], count int) data.Stream[T] {
+	if collection, ok := stream.(data.Collection); ok && count >= collection.Count() {
+		return stream
+	}
+
 	return &data.FunctionStream[T]{
 		OnIterator: func() data.Iterator[T] {
 			if count < 1 {

@@ -4,6 +4,10 @@ import "github.com/foxesknow/go-echo/data"
 
 // Returns true if there are any items in the sequence
 func Any[T any](stream data.Stream[T]) bool {
+	if collection, ok := stream.(data.Collection); ok {
+		return collection.Count() != 0
+	}
+
 	i := stream.Iterator()
 	return i.MoveNext()
 }

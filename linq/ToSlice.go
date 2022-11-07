@@ -4,7 +4,14 @@ import "github.com/foxesknow/go-echo/data"
 
 // Converts a sequence to a slice
 func ToSlice[T any](stream data.Stream[T]) []T {
-	slice := make([]T, 0, 8)
+	capacity := 8
+
+	// We can pre-allocate all the spce up front
+	if collection, ok := stream.(data.Collection); ok {
+		capacity = collection.Count()
+	}
+
+	slice := make([]T, 0, capacity)
 	return ToExistingSlice(stream, slice)
 }
 

@@ -24,7 +24,10 @@ func (self *sliceIterator[T]) Current() T {
 
 func (self *sliceStream[T]) Iterator() Iterator[T] {
 	return &sliceIterator[T]{slice: self.slice, next: -1}
+}
 
+func (self *sliceStream[T]) Count() int {
+	return len(self.slice)
 }
 
 // Returns a stream for a slice

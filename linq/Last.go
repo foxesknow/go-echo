@@ -6,6 +6,11 @@ import (
 
 // Returns the last item in a sequence, or (zero, false) if not found
 func Last[T any](stream data.Stream[T]) (item T, found bool) {
+	if collection, ok := stream.(data.Collection); ok && collection.Count() == 0 {
+		var zero T
+		return zero, false
+	}
+
 	var last T
 	gotSomething := false
 	for i := stream.Iterator(); i.MoveNext(); {

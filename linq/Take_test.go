@@ -33,6 +33,26 @@ func Test_Take(t *testing.T) {
 	}
 }
 
+func Test_Take_More_Than_Available_1(t *testing.T) {
+	data := data.FromValues(1, 2, 3, 4)
+	skipped := Take(data, 10)
+	flattened := ToSlice(skipped)
+
+	if len(flattened) != 4 {
+		t.Error("expected 4 items")
+	}
+}
+
+func Test_Take_Size_Of_Stream(t *testing.T) {
+	data := data.FromValues(1, 2, 3, 4)
+	skipped := Take(data, 4)
+	flattened := ToSlice(skipped)
+
+	if len(flattened) != 4 {
+		t.Error("expected 4 items")
+	}
+}
+
 func Test_Take_Negative_Count(t *testing.T) {
 	data := data.FromValues(1, 2, 3, 4)
 	skipped := Take(data, -2)

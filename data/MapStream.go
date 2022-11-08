@@ -1,9 +1,5 @@
 package data
 
-import (
-	C "github.com/foxesknow/go-echo/collections"
-)
-
 func extractKeys[K comparable, V any](m map[K]V) []K {
 	slice := make([]K, 0, len(m))
 
@@ -24,11 +20,11 @@ func extractValues[K comparable, V any](m map[K]V) []V {
 	return slice
 }
 
-func extractPairs[K comparable, V any](m map[K]V) []C.KeyValuePair[K, V] {
-	slice := make([]C.KeyValuePair[K, V], len(m))
+func extractPairs[K comparable, V any](m map[K]V) []KeyValuePair[K, V] {
+	slice := make([]KeyValuePair[K, V], len(m))
 
 	for k, v := range m {
-		slice = append(slice, C.KeyValuePair[K, V]{Key: k, Value: v})
+		slice = append(slice, KeyValuePair[K, V]{Key: k, Value: v})
 	}
 
 	return slice
@@ -59,13 +55,13 @@ func FromMapValues[K comparable, V any](m map[K]V) Stream[V] {
 }
 
 // Returns a stream for the key/value pairs in a map
-func FromMap[K comparable, V any](m map[K]V) Stream[C.KeyValuePair[K, V]] {
-	return &FunctionStream[C.KeyValuePair[K, V]]{
-		OnIterator: func() Iterator[C.KeyValuePair[K, V]] {
+func FromMap[K comparable, V any](m map[K]V) Stream[KeyValuePair[K, V]] {
+	return &FunctionStream[KeyValuePair[K, V]]{
+		OnIterator: func() Iterator[KeyValuePair[K, V]] {
 			// Extract the keys here so we only do so if the user does enumerate
 			slice := extractPairs(m)
 
-			return &sliceIterator[C.KeyValuePair[K, V]]{slice: slice, next: -1}
+			return &sliceIterator[KeyValuePair[K, V]]{slice: slice, next: -1}
 		},
 	}
 }

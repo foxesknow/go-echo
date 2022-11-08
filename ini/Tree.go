@@ -3,7 +3,7 @@ package ini
 import (
 	"fmt"
 
-	"github.com/foxesknow/go-echo/collections"
+	"github.com/foxesknow/go-echo/data"
 )
 
 type node struct {
@@ -12,7 +12,7 @@ type node struct {
 }
 
 type Tree struct {
-	values         map[string]collections.KeyValuePair[string, string]
+	values         map[string]data.KeyValuePair[string, string]
 	config         *Config
 	children       map[string]*node
 	name           string
@@ -22,7 +22,7 @@ type Tree struct {
 
 func newTree(config *Config, name string) *Tree {
 	return &Tree{
-		values:         make(map[string]collections.KeyValuePair[string, string]),
+		values:         make(map[string]data.KeyValuePair[string, string]),
 		config:         config,
 		children:       make(map[string]*node),
 		name:           name,
@@ -66,7 +66,7 @@ func (self *Tree) HasValues() bool {
 // Adds or replaces an existing value in the tree
 func (self *Tree) AddValue(name string, value string) {
 	normalizedName := self.config.caseNormalize(name)
-	self.values[normalizedName] = collections.KeyValuePair[string, string]{Key: name, Value: value}
+	self.values[normalizedName] = data.KeyValuePair[string, string]{Key: name, Value: value}
 }
 
 // Returns the specified child, or (nil, false) if not found
@@ -135,8 +135,8 @@ func (self *Tree) GetOrCreateChild(name string) *Tree {
 
 // Returns the keys and their values in the current tree.
 // The case of the key will be the same as the source
-func (self *Tree) Pairs() []collections.KeyValuePair[string, string] {
-	pairs := make([]collections.KeyValuePair[string, string], len(self.values))
+func (self *Tree) Pairs() []data.KeyValuePair[string, string] {
+	pairs := make([]data.KeyValuePair[string, string], len(self.values))
 
 	i := 0
 	for _, pair := range self.values {

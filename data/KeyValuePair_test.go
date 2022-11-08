@@ -1,10 +1,10 @@
-package collections
+package data
 
 import (
 	"testing"
 )
 
-func TestAsString(t *testing.T) {
+func Test_KeyValue_Pair_AsString(t *testing.T) {
 	kvp := KeyValuePair[string, string]{Key: "Jack", Value: "Island"}
 	asString := kvp.String()
 

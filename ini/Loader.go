@@ -7,7 +7,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/foxesknow/go-echo/collections"
+	"github.com/foxesknow/go-echo/data"
 )
 
 const blockMarker string = "\"\"\""
@@ -93,7 +93,7 @@ func FromString(config *Config, text string) (*Tree, error) {
 			}
 
 			normalizedKey := root.config.caseNormalize(key)
-			activeSection.values[normalizedKey] = collections.KeyValuePair[string, string]{Key: key, Value: value}
+			activeSection.values[normalizedKey] = data.KeyValuePair[string, string]{Key: key, Value: value}
 
 			lineNo += lineDelta
 		}

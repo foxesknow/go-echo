@@ -63,7 +63,7 @@ func (self *Stack[T]) IsEmpty() bool {
 	return self.count == 0
 }
 
-func (self *Stack[T]) Values() Stream[T] {
+func (self *Stack[T]) Stream() Stream[T] {
 	if self.count == 0 {
 		return EmptyStream[T]()
 	}

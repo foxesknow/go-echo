@@ -3,6 +3,7 @@ package linq
 import (
 	"testing"
 
+	"github.com/foxesknow/go-echo/collections"
 	"github.com/foxesknow/go-echo/data"
 )
 
@@ -37,7 +38,7 @@ func Test_CountWhere_NonEmpty(t *testing.T) {
 
 func Test_CountStack(t *testing.T) {
 	// Count the odd numbers
-	stack := data.NewStack[int]().Push(10).Push(20)
+	stack := collections.NewStack[int]().Push(10).Push(20)
 	count := Count(stack.Stream())
 	if count != 2 {
 		t.Error("expected 2 items")

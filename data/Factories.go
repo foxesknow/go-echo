@@ -7,11 +7,19 @@ func Generate[T any](generator func() (value T, keepGoing bool)) Stream[T] {
 	return &FunctionStream[T]{
 		OnIterator: func() Iterator[T] {
 			var current T
+			keepGoing := true
 
 			return &FunctionIterator[T]{
 				OnMoveNext: func() bool {
-					var keepGoing bool
-					current, keepGoing = generator()
+					if keepGoing {
+						current, keepGoing = generator()
+
+						if !keepGoing {
+							var zero T
+							current = zero
+						}
+					}
+
 					return keepGoing
 				},
 				OnCurrent: func() T {

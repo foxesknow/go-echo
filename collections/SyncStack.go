@@ -6,7 +6,7 @@ import (
 	"github.com/foxesknow/go-echo/data"
 )
 
-type SyncStack[T any] struct {
+type syncStack[T any] struct {
 	lock  sync.RWMutex
 	head  *syncStackNode[T]
 	count int
@@ -17,9 +17,9 @@ type syncStackNode[T any] struct {
 	Next  *syncStackNode[T]
 }
 
-// Creates a new stack
-func NewSyncStack[T any]() *SyncStack[T] {
-	return &SyncStack[T]{
+// Creates a new stack, which is thread safe
+func NewSyncStack[T any]() Stack[T] {
+	return &syncStack[T]{
 		lock:  sync.RWMutex{},
 		head:  nil,
 		count: 0,
@@ -27,7 +27,7 @@ func NewSyncStack[T any]() *SyncStack[T] {
 }
 
 // Removes all items from the stack
-func (self *SyncStack[T]) Clear() {
+func (self *syncStack[T]) Clear() {
 	self.lock.Lock()
 	defer self.lock.Unlock()
 
@@ -36,7 +36,7 @@ func (self *SyncStack[T]) Clear() {
 }
 
 // Pushes a new item onto the top of the stack
-func (self *SyncStack[T]) Push(value T) *SyncStack[T] {
+func (self *syncStack[T]) Push(value T) Stack[T] {
 	self.lock.Lock()
 	defer self.lock.Unlock()
 
@@ -52,7 +52,7 @@ func (self *SyncStack[T]) Push(value T) *SyncStack[T] {
 }
 
 // Attempts to remove on item from the top of the stack
-func (self *SyncStack[T]) Pop() (value T, popped bool) {
+func (self *syncStack[T]) Pop() (value T, popped bool) {
 	self.lock.Lock()
 	defer self.lock.Unlock()
 
@@ -69,7 +69,7 @@ func (self *SyncStack[T]) Pop() (value T, popped bool) {
 }
 
 // Attempts to return the top of the stack without removing it
-func (self *SyncStack[T]) Peek() (value T, peeked bool) {
+func (self *syncStack[T]) Peek() (value T, peeked bool) {
 	self.lock.RLock()
 	defer self.lock.RUnlock()
 
@@ -81,7 +81,7 @@ func (self *SyncStack[T]) Peek() (value T, peeked bool) {
 }
 
 // Returns the number of items in the ctack
-func (self *SyncStack[T]) Count() int {
+func (self *syncStack[T]) Count() int {
 	self.lock.RLock()
 	defer self.lock.RUnlock()
 
@@ -89,7 +89,7 @@ func (self *SyncStack[T]) Count() int {
 }
 
 // Returns true if the stack is empty, otherwise false
-func (self *SyncStack[T]) IsEmpty() bool {
+func (self *syncStack[T]) IsEmpty() bool {
 	return self.Count() == 0
 }
 
@@ -97,7 +97,7 @@ func (self *SyncStack[T]) IsEmpty() bool {
 // The item on the top of the stack is first in the stream.
 // As this is a sync stack the returned items represent a snapshot of the items in the
 // stack, and by the time you have iterated over the stack it may have changed.
-func (self *SyncStack[T]) Stream() data.Stream[T] {
+func (self *syncStack[T]) Stream() data.Stream[T] {
 	if self.IsEmpty() {
 		return data.EmptyStream[T]()
 	}
@@ -128,7 +128,7 @@ func (self *SyncStack[T]) Stream() data.Stream[T] {
 	}
 }
 
-func (self *SyncStack[T]) grabHead() *syncStackNode[T] {
+func (self *syncStack[T]) grabHead() *syncStackNode[T] {
 	self.lock.RLock()
 	defer self.lock.RUnlock()
 

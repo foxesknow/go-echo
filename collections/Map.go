@@ -2,74 +2,37 @@ package collections
 
 import "github.com/foxesknow/go-echo/data"
 
-type Map[K comparable, V any] struct {
-	m map[K]V
-}
+type Map[K comparable, V any] interface {
+	// Checks to see if a key is in the mao
+	ContainsKey(key K) bool
 
-// Creates a new map
-func NewMap[K comparable, V any]() *Map[K, V] {
-	return &Map[K, V]{
-		m: make(map[K]V),
-	}
-}
+	// Attempts to remove an item, returning true if the item was removed, otherwise false
+	Remove(key K) bool
 
-// Returns the number of items in the map
-func (self *Map[K, V]) Count() int {
-	return len(self.m)
-}
+	// Attempts to get an item
+	Get(key K) (item V, found bool)
 
-// Checks to see if a key is present in the map
-func (self *Map[K, V]) ContainsKey(key K) bool {
-	_, found := self.m[key]
-	return found
-}
+	// Adds an item, but only if it is not already there
+	Add(key K, value V) bool
 
-// Tries to remove a key from the map.
-// Return true if the key was removed, otherwise false.
-func (self *Map[K, V]) Remove(key K) bool {
-	if _, found := self.m[key]; found {
-		delete(self.m, key)
-		return true
-	}
+	// Adds an item if it is not there, otherwise updates the value mapped to the key
+	AddOrUpdate(key K, value V)
 
-	return false
-}
+	// Removes all items from the map
+	Clear()
 
-// Attempts to get a value from the map.
-// If the key does not exist returns (zero, false)
-func (self *Map[K, V]) Get(key K) (item V, found bool) {
-	item, found = self.m[key]
-	return
-}
+	// Returns the number of items in the map
+	Count() int
 
-// Adds an item to the map if the key does not already exists.
-// Returns true if the item was added, false if not
-func (self *Map[K, V]) Add(key K, value V) bool {
-	if self.ContainsKey(key) {
-		return false
-	}
+	// Returns true if the map is empty, otherwise false
+	IsEmpty() bool
 
-	self.m[key] = value
-	return true
-}
+	// Returns a stream of all keys in the map, in an undefined order
+	Keys() data.Stream[K]
 
-// Adds an item, if the key is not already present.
-// If the key is present then the value is updated
-func (self *Map[K, V]) AddOrUpdate(key K, value V) {
-	self.m[key] = value
-}
+	// Returns a stream of all values in the map, in an undefined order
+	Values() data.Stream[V]
 
-// Returns a stream containing they keys in the map
-func (self *Map[K, V]) Keys() data.Stream[K] {
-	return data.FromMapKeys(self.m)
-}
-
-// Returns a stream containing the values in the map
-func (self *Map[K, V]) Values() data.Stream[V] {
-	return data.FromMapValues(self.m)
-}
-
-// Returns a stream containing they KeyValue pairs in the map
-func (self *Map[K, V]) KeyValuePairs() data.Stream[data.KeyValuePair[K, V]] {
-	return data.FromMap(self.m)
+	// Returns a stream of all pairs in the map, in an undefined order
+	KeyValuePairs() data.Stream[data.KeyValuePair[K, V]]
 }

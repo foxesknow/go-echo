@@ -6,7 +6,7 @@ import "github.com/foxesknow/go-echo/data"
 func ToSlice[T any](stream data.Stream[T]) []T {
 	capacity := 8
 
-	// We can pre-allocate all the spce up front
+	// We can pre-allocate all the space up front
 	if collection, ok := stream.(data.Collection); ok {
 		capacity = collection.Count()
 	}

@@ -163,3 +163,24 @@ func Test_FromChannelWithContext(t *testing.T) {
 		t.Error("not all data made it through")
 	}
 }
+
+func Test_Generate(t *testing.T) {
+	next := 0
+	stream := Generate(func() (value int, keepGoing bool) {
+		next++
+		value = next
+		keepGoing = (next != 5)
+
+		return
+	})
+
+	sum := 0
+	for i := stream.Iterator(); i.MoveNext(); {
+		current := i.Current()
+		sum += current
+	}
+
+	if sum != 10 {
+		t.Error("not all data made it through")
+	}
+}

@@ -8,7 +8,7 @@ import (
 
 func Test_OrderBy(t *testing.T) {
 	original := data.FromValues(5, 2, 9, 1, 3, 8, 10)
-	sorted := ToSlice(OrderBy(original, func(lhs, rhs *int) bool { return *lhs < *rhs }))
+	sorted := ToSlice(OrderBy(original, func(lhs, rhs int) bool { return lhs < rhs }))
 
 	if len(sorted) != 7 {
 		t.Error("should have 7 items")

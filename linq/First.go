@@ -1,37 +1,39 @@
 package linq
 
 import (
+	"fmt"
+
 	"github.com/foxesknow/go-echo/data"
 	"github.com/foxesknow/go-echo/generic"
 )
 
 // Returns the first item in the sequence if there is one
 // otherwise return (ZeroValue, false)
-func First[T any](stream data.Stream[T]) (item T, found bool) {
+func First[T any](stream data.Stream[T]) (item T, err error) {
 	if i := stream.Iterator(); i.MoveNext() {
-		return i.Current(), true
+		return i.Current(), nil
 	}
 
-	return generic.Zero[T](), false
+	return generic.Zero[T](), fmt.Errorf("no items in stream")
 }
 
 // Returns the first item in a sequence that satisfies a given predicate
 // otherwise return (ZeroValue, false)
-func FirstWhere[T any](stream data.Stream[T], predicate func(T) bool) (item T, found bool) {
+func FirstWhere[T any](stream data.Stream[T], predicate func(T) bool) (item T, err error) {
 
 	for i := stream.Iterator(); i.MoveNext(); {
 		current := i.Current()
 		if predicate(current) {
-			return current, true
+			return current, nil
 		}
 	}
 
-	return generic.Zero[T](), false
+	return generic.Zero[T](), fmt.Errorf("predicate did not match any items")
 }
 
 // Returns the first item in the sequence, or a default value is the sequence is empty
 func FirstOrDefault[T any](stream data.Stream[T], defaultValue T) T {
-	if item, found := First(stream); found {
+	if item, err := First(stream); err == nil {
 		return item
 	}
 
@@ -41,7 +43,7 @@ func FirstOrDefault[T any](stream data.Stream[T], defaultValue T) T {
 // Returns the first item in the sequence that matches a predicate,
 // or a default value is the sequence is empty
 func FirstOrDefaultWhere[T any](stream data.Stream[T], defaultValue T, predicate func(T) bool) T {
-	if item, found := FirstWhere(stream, predicate); found {
+	if item, err := FirstWhere(stream, predicate); err == nil {
 		return item
 	}
 

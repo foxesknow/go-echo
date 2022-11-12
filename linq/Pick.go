@@ -1,6 +1,8 @@
 package linq
 
 import (
+	"fmt"
+
 	"github.com/foxesknow/go-echo/data"
 )
 
@@ -10,7 +12,7 @@ import (
 // two values it wishes to use for the current pick
 // If the sequence is empty then returns (zero, false)
 // You can use this method to implement min or max.
-func Pick[T any](stream data.Stream[T], accept func(candidate, current T) bool) (value T, found bool) {
+func Pick[T any](stream data.Stream[T], accept func(candidate, current T) bool) (value T, err error) {
 	if i := stream.Iterator(); i.MoveNext() {
 		picked := i.Current()
 
@@ -21,9 +23,9 @@ func Pick[T any](stream data.Stream[T], accept func(candidate, current T) bool) 
 			}
 		}
 
-		return picked, true
+		return picked, nil
 	}
 
 	var zero T
-	return zero, false
+	return zero, fmt.Errorf("stream was empty")
 }

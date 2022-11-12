@@ -9,9 +9,9 @@ import (
 func Test_Pick_Max_Empty(t *testing.T) {
 	numbers := data.FromValues[int]()
 
-	max, found := Pick(numbers, func(candidate, current int) bool { return candidate > current })
+	max, err := Pick(numbers, func(candidate, current int) bool { return candidate > current })
 
-	if found {
+	if err == nil {
 		t.Error("shouldn't have found anything as the sequence is empty")
 	}
 
@@ -23,9 +23,9 @@ func Test_Pick_Max_Empty(t *testing.T) {
 func Test_Pick_Max(t *testing.T) {
 	numbers := data.FromValues(8, 1, 78, 31, 2, 7, 11)
 
-	max, found := Pick(numbers, func(candidate, current int) bool { return candidate > current })
+	max, err := Pick(numbers, func(candidate, current int) bool { return candidate > current })
 
-	if !found {
+	if err != nil {
 		t.Error("expected to find something")
 	}
 
@@ -37,9 +37,9 @@ func Test_Pick_Max(t *testing.T) {
 func Test_Pick_Max_One_Item(t *testing.T) {
 	numbers := data.FromValues(8)
 
-	max, found := Pick(numbers, func(candidate, current int) bool { return candidate > current })
+	max, err := Pick(numbers, func(candidate, current int) bool { return candidate > current })
 
-	if !found {
+	if err != nil {
 		t.Error("expected to find something")
 	}
 
@@ -51,9 +51,9 @@ func Test_Pick_Max_One_Item(t *testing.T) {
 func Test_Pick_Min(t *testing.T) {
 	numbers := data.FromValues(8, 1, 78, 31, 2, 7, 11)
 
-	max, found := Pick(numbers, func(candidate, current int) bool { return candidate < current })
+	max, err := Pick(numbers, func(candidate, current int) bool { return candidate < current })
 
-	if !found {
+	if err != nil {
 		t.Error("expected to find something")
 	}
 

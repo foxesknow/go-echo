@@ -42,3 +42,21 @@ func Test_Skip_Negative_Count(t *testing.T) {
 		t.Error("expected 4 items")
 	}
 }
+
+func Test_SkipWhile_Empty(t *testing.T) {
+	empty := data.EmptyStream[int]()
+	skipped := SkipWhile(empty, func(item, _ int) bool { return item < 5 })
+
+	if Count(skipped) != 0 {
+		t.Error("should be no items")
+	}
+}
+
+func Test_SkipWhile(t *testing.T) {
+	empty := data.FromValues(2, 4, 6, 8, 10)
+	skipped := SkipWhile(empty, func(item, _ int) bool { return item < 5 })
+
+	if len(ToSlice(skipped)) != 3 {
+		t.Error("should be 3 items")
+	}
+}

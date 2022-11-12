@@ -25,6 +25,8 @@ func Zip[T1 any, T2 any, R any](first data.Stream[T1], second data.Stream[T2], c
 						return true
 					}
 
+					var zero R
+					current = zero
 					done = true
 					return false
 				},

@@ -8,8 +8,8 @@ import (
 
 func Test_ElementAt_Empty(t *testing.T) {
 	for i := -5; i != 5; i++ {
-		_, found := ElementAt(data.EmptyStream[int](), i)
-		if found {
+		_, err := ElementAt(data.EmptyStream[int](), i)
+		if err == nil {
 			t.Errorf("nothing should be found at %d", i)
 		}
 	}

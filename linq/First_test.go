@@ -7,9 +7,9 @@ import (
 )
 
 func Test_First_Empty(t *testing.T) {
-	value, found := First(data.EmptyStream[int]())
+	value, err := First(data.EmptyStream[int]())
 
-	if found {
+	if err == nil {
 		t.Error("nothing should have been found")
 	}
 
@@ -21,9 +21,9 @@ func Test_First_Empty(t *testing.T) {
 
 func Test_First(t *testing.T) {
 	numbers := data.FromSlice([]int{5, 7, 9})
-	value, found := First(numbers)
+	value, err := First(numbers)
 
-	if !found {
+	if err != nil {
 		t.Error("should have found something")
 	}
 
@@ -49,18 +49,18 @@ func Test_FirstOrDefault(t *testing.T) {
 }
 
 func Test_FirstWhere_Empty(t *testing.T) {
-	value, found := FirstWhere(data.EmptyStream[int](), func(x int) bool { return x > 1 })
+	value, err := FirstWhere(data.EmptyStream[int](), func(x int) bool { return x > 1 })
 
 	// value will bet set to the "zero value"
-	if value != 0 || found {
+	if value != 0 || err == nil {
 		t.Error("should not have found anything")
 	}
 }
 
 func Test_FirstWhere(t *testing.T) {
-	value, found := FirstWhere(data.FromValues(5, 7, 9), func(x int) bool { return x > 8 })
+	value, err := FirstWhere(data.FromValues(5, 7, 9), func(x int) bool { return x > 8 })
 
-	if value != 9 || !found {
+	if value != 9 || err != nil {
 		t.Error("should have found something")
 	}
 }

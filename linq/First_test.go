@@ -32,6 +32,28 @@ func Test_First(t *testing.T) {
 	}
 }
 
+func Test_First_Generator_WithData(t *testing.T) {
+	numbers := data.Generate(func() (int, bool) { return 5, true })
+	value, err := First(numbers)
+
+	if err != nil {
+		t.Error("should have found something")
+	}
+
+	if value != 5 {
+		t.Error("value should be 5")
+	}
+}
+
+func Test_First_Generator_No(t *testing.T) {
+	numbers := data.Generate(func() (int, bool) { return 5, false })
+	_, err := First(numbers)
+
+	if err == nil {
+		t.Error("the sequence was empty")
+	}
+}
+
 func Test_FirstOrDefault_Empty(t *testing.T) {
 	value := FirstOrDefault(data.EmptyStream[int](), 99)
 

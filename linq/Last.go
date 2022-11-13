@@ -1,14 +1,26 @@
 package linq
 
 import (
+	"fmt"
+
 	"github.com/foxesknow/go-echo/data"
 )
 
 // Returns the last item in a sequence, or (zero, false) if not found
-func Last[T any](stream data.Stream[T]) (item T, found bool) {
+func Last[T any](stream data.Stream[T]) (item T, err error) {
+	if indexable, ok := stream.(data.IndexableCollection[T]); ok {
+		if indexable.Count() == 0 {
+			err = makeNoItemsInStream()
+			return
+		}
+
+		item, _ = indexable.Get(indexable.Count() - 1)
+		return
+	}
+
 	if collection, ok := stream.(data.Collection); ok && collection.Count() == 0 {
 		var zero T
-		return zero, false
+		return zero, nil
 	}
 
 	var last T
@@ -19,16 +31,16 @@ func Last[T any](stream data.Stream[T]) (item T, found bool) {
 	}
 
 	if gotSomething {
-		return last, true
+		return last, nil
 	}
 
 	var zero T
-	return zero, false
+	return zero, fmt.Errorf("predicate did not match any items")
 }
 
 // Returns the last item in a sequence that matches the predicate
 // or (zero, false) if not found
-func LastWhere[T any](stream data.Stream[T], predicate func(T) bool) (item T, found bool) {
+func LastWhere[T any](stream data.Stream[T], predicate func(T) bool) (item T, err error) {
 	var last T
 	gotSomething := false
 
@@ -41,17 +53,17 @@ func LastWhere[T any](stream data.Stream[T], predicate func(T) bool) (item T, fo
 	}
 
 	if gotSomething {
-		return last, true
+		return last, nil
 	}
 
 	var zero T
-	return zero, false
+	return zero, fmt.Errorf("predicate did not match any items")
 }
 
 // Returns the last item in a sequence, or the specified
 // default if the sequence is empty
 func LastOrDefault[T any](stream data.Stream[T], defaultValue T) T {
-	if item, found := Last(stream); found {
+	if item, err := Last(stream); err == nil {
 		return item
 	}
 
@@ -61,7 +73,7 @@ func LastOrDefault[T any](stream data.Stream[T], defaultValue T) T {
 // Returns the last item in the sequence which matches the specified predicate,
 // or the specified default if none is found
 func LastOrDefaultWhere[T any](stream data.Stream[T], defaultValue T, predicate func(T) bool) T {
-	if item, found := LastWhere(stream, predicate); found {
+	if item, err := LastWhere(stream, predicate); err == nil {
 		return item
 	}
 

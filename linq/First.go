@@ -10,11 +10,28 @@ import (
 // Returns the first item in the sequence if there is one
 // otherwise return (ZeroValue, false)
 func First[T any](stream data.Stream[T]) (item T, err error) {
+	if indexable, ok := stream.(data.IndexableCollection[T]); ok {
+		if indexable.Count() == 0 {
+			err = makeNoItemsInStream()
+			return
+		}
+
+		item, _ = indexable.Get(0)
+		return
+	}
+
+	if collection, ok := stream.(data.Collection); ok {
+		if collection.Count() == 0 {
+			err = makeNoItemsInStream()
+			return
+		}
+	}
+
 	if i := stream.Iterator(); i.MoveNext() {
 		return i.Current(), nil
 	}
 
-	return generic.Zero[T](), fmt.Errorf("no items in stream")
+	return generic.Zero[T](), makeNoItemsInStream()
 }
 
 // Returns the first item in a sequence that satisfies a given predicate

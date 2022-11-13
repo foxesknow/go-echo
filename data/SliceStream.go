@@ -1,5 +1,7 @@
 package data
 
+import "fmt"
+
 type sliceStream[T any] struct {
 	slice []T
 }
@@ -28,6 +30,15 @@ func (self *sliceStream[T]) Iterator() Iterator[T] {
 
 func (self *sliceStream[T]) Count() int {
 	return len(self.slice)
+}
+
+func (self *sliceStream[T]) Get(index int) (item T, err error) {
+	if index >= 0 && index < len(self.slice) {
+		return self.slice[index], nil
+	}
+
+	err = fmt.Errorf("invalid index: %d", index)
+	return
 }
 
 // Returns a stream for a slice

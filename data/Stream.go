@@ -1,5 +1,7 @@
 package data
 
+import "fmt"
+
 // Indicates that a type can stream the values it contains
 type Stream[T any] interface {
 	// Create an iterator to the values in the stream
@@ -46,6 +48,11 @@ func (self *emptyStream[T]) Iterator() Iterator[T] {
 
 func (self *emptyStream[T]) Count() int {
 	return 0
+}
+
+func (self *emptyStream[T]) Get(index int) (item T, err error) {
+	err = fmt.Errorf("invalid index: %d", index)
+	return
 }
 
 type emptyIterator[T any] struct {

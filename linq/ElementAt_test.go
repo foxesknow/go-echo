@@ -63,3 +63,21 @@ func Test_ElementAtOrDefault_Middle(t *testing.T) {
 		t.Error("expected 22")
 	}
 }
+
+func Test_ElementAt_Generator(t *testing.T) {
+	next := 0
+	numbers := data.Generate(func() (int, bool) { next += 2; return next, true })
+
+	if item, _ := ElementAt(numbers, 5); item != 12 {
+		t.Error("expected 12")
+	}
+}
+
+func Test_ElementAt_Generator_Bad_Index(t *testing.T) {
+	next := 0
+	numbers := data.Generate(func() (int, bool) { next += 2; return next, next < 20 })
+
+	if _, err := ElementAt(numbers, 20); err == nil {
+		t.Error("should have failed")
+	}
+}

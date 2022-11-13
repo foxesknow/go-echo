@@ -7,9 +7,9 @@ import (
 )
 
 func Test_Last_Empty(t *testing.T) {
-	value, found := Last(data.EmptyStream[int]())
+	value, err := Last(data.EmptyStream[int]())
 
-	if found {
+	if err == nil {
 		t.Error("nothing should have been found")
 	}
 
@@ -21,14 +21,38 @@ func Test_Last_Empty(t *testing.T) {
 
 func Test_Last(t *testing.T) {
 	numbers := data.FromSlice([]int{5, 7, 9})
-	value, found := Last(numbers)
+	value, err := Last(numbers)
 
-	if !found {
+	if err != nil {
 		t.Error("should have found something")
 	}
 
 	if value != 9 {
 		t.Error("value should be 9")
+	}
+}
+
+func Test_Last_Generator(t *testing.T) {
+	next := 0
+	numbers := data.Generate(func() (int, bool) { next++; return next, next != 10 })
+	value, err := Last(numbers)
+
+	if err != nil {
+		t.Error("should have found something")
+	}
+
+	if value != 9 {
+		t.Error("value should be 9")
+	}
+}
+
+func Test_Last_Generator_Nothing(t *testing.T) {
+	next := 0
+	numbers := data.Generate(func() (int, bool) { next++; return next, next != 1 })
+	_, err := Last(numbers)
+
+	if err == nil {
+		t.Error("should have found nothing")
 	}
 }
 
@@ -49,18 +73,18 @@ func Test_LastOrDefault(t *testing.T) {
 }
 
 func Test_LastWhere_Empty(t *testing.T) {
-	value, found := LastWhere(data.EmptyStream[int](), func(x int) bool { return x > 1 })
+	value, err := LastWhere(data.EmptyStream[int](), func(x int) bool { return x > 1 })
 
 	// value will bet set to the "zero value"
-	if value != 0 || found {
+	if value != 0 || err == nil {
 		t.Error("should not have found anything")
 	}
 }
 
 func Test_LastWhere(t *testing.T) {
-	value, found := LastWhere(data.FromValues(5, 7, 9, 11), func(x int) bool { return x > 8 })
+	value, err := LastWhere(data.FromValues(5, 7, 9, 11), func(x int) bool { return x > 8 })
 
-	if value != 11 || !found {
+	if value != 11 || err != nil {
 		t.Error("should have found something")
 	}
 }

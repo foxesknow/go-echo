@@ -140,3 +140,32 @@ func FromChannelWithContext[T any](channel <-chan T, cancel context.Context) Str
 		},
 	}
 }
+
+// Enumerates over data received from a channel until the predicate evaluates to false
+// or the channel is closed.
+func FromChannelWhile[T any](channel <-chan T, predicate func(T) bool) Stream[T] {
+	return &FunctionStream[T]{
+		OnIterator: func() Iterator[T] {
+			var current T
+
+			return &FunctionIterator[T]{
+				OnMoveNext: func() bool {
+					item, ok := <-channel
+					if ok {
+						if predicate(item) {
+							current = item
+							return true
+						}
+					}
+
+					var zero T
+					current = zero
+					return false
+				},
+				OnCurrent: func() T {
+					return current
+				},
+			}
+		},
+	}
+}

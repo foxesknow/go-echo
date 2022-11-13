@@ -164,6 +164,34 @@ func Test_FromChannelWithContext(t *testing.T) {
 	}
 }
 
+func Test_FromChannelWhile(t *testing.T) {
+	channel := make(chan int, 5)
+	result := make(chan int)
+
+	go func() {
+		stream := FromChannelWhile(channel, func(i int) bool { return i != -1 })
+		sum := 0
+
+		for i := stream.Iterator(); i.MoveNext(); {
+			sum += i.Current()
+		}
+
+		result <- sum
+	}()
+
+	channel <- 1
+	channel <- 5
+	channel <- 7
+	channel <- 9
+	channel <- -1
+
+	sum := <-result
+
+	if sum != 22 {
+		t.Error("expected 22")
+	}
+}
+
 func Test_Generate(t *testing.T) {
 	next := 0
 	stream := Generate(func() (value int, keepGoing bool) {

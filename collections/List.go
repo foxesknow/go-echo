@@ -29,4 +29,7 @@ type List[T any] interface {
 
 	// Returns a stream to the items in the stack, starting with the top item
 	Stream() data.Stream[T]
+
+	// Removes the item at the specified index
+	RemoveAt(index int) error
 }

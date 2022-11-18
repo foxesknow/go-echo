@@ -48,6 +48,10 @@ func (self *defaultSet[T]) Clear() {
 }
 
 func (self *defaultSet[T]) Stream() data.Stream[T] {
+	if len(self.set) == 0 {
+		return data.EmptyStream[T]()
+	}
+
 	return data.FromMapKeys(self.set)
 }
 

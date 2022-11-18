@@ -84,3 +84,16 @@ func (self *defaultList[T]) Stream() data.Stream[T] {
 
 	return data.FromSlice(self.items)
 }
+
+func (self *defaultList[T]) RemoveAt(index int) error {
+	if index >= 0 && index < len(self.items) {
+		newItems := make([]T, 0, len(self.items))
+
+		newItems = append(newItems, self.items[:index]...)
+		newItems = append(newItems, self.items[index+1:]...)
+		self.items = newItems
+		return nil
+	} else {
+		return fmt.Errorf("invalid index: %d", index)
+	}
+}

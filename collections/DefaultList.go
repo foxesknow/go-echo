@@ -10,6 +10,7 @@ type defaultList[T any] struct {
 	items []T
 }
 
+// Creates a list backed by a slice
 func NewList[T any]() List[T] {
 	return &defaultList[T]{
 		items: make([]T, 0, 8),

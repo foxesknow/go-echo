@@ -3,7 +3,7 @@ package collections
 import "github.com/foxesknow/go-echo/data"
 
 type Map[K comparable, V any] interface {
-	// Checks to see if a key is in the mao
+	// Checks to see if a key is in the map
 	ContainsKey(key K) bool
 
 	// Attempts to remove an item, returning true if the item was removed, otherwise false

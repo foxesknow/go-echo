@@ -227,6 +227,66 @@ func Test_List_RemoveAt(t *testing.T) {
 	}
 }
 
+func Test_List_RemoveFirst(t *testing.T) {
+	list := NewList[int]()
+
+	list.Add(10)
+	list.Add(20)
+	list.Add(30)
+	list.Add(40)
+
+	if err := list.RemoveAt(0); err != nil {
+		t.Error("should have removed item")
+	}
+
+	if list.Count() != 3 {
+		t.Error("expected 3 items")
+		return
+	}
+
+	if item, _ := list.Get(0); item != 20 {
+		t.Error("expected 20")
+	}
+
+	if item, _ := list.Get(1); item != 30 {
+		t.Error("expected 30")
+	}
+
+	if item, _ := list.Get(2); item != 40 {
+		t.Error("expected 40")
+	}
+}
+
+func Test_List_RemoveLast(t *testing.T) {
+	list := NewList[int]()
+
+	list.Add(10)
+	list.Add(20)
+	list.Add(30)
+	list.Add(40)
+
+	if err := list.RemoveAt(3); err != nil {
+		t.Error("should have removed item")
+	}
+
+	if list.Count() != 3 {
+		t.Error("expected 3 items")
+		return
+	}
+
+	if item, _ := list.Get(0); item != 10 {
+		t.Error("expected 10")
+	}
+
+	if item, _ := list.Get(1); item != 20 {
+		t.Error("expected 20")
+	}
+
+	if item, _ := list.Get(2); item != 30 {
+		t.Error("expected 30")
+	}
+}
+
 func Test_List_RemoveAt_BadIndex(t *testing.T) {
 	list := NewList[int]()
 

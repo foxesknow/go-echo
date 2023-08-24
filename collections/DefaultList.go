@@ -86,12 +86,17 @@ func (self *defaultList[T]) Stream() data.Stream[T] {
 }
 
 func (self *defaultList[T]) RemoveAt(index int) error {
+	length := len(self.items)
 	if index >= 0 && index < len(self.items) {
-		newItems := make([]T, 0, len(self.items))
+		if index < length {
+			copy(self.items[index:], self.items[index+1:])
+		}
 
-		newItems = append(newItems, self.items[:index]...)
-		newItems = append(newItems, self.items[index+1:]...)
-		self.items = newItems
+		// We need to zero out the item so it can be GC'd
+		var zero T
+		self.items[length-1] = zero
+		self.items = self.items[0 : length-1]
+
 		return nil
 	} else {
 		return fmt.Errorf("invalid index: %d", index)

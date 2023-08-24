@@ -31,6 +31,11 @@ func (self *defaultStack[T]) Pop() (value T, popped bool) {
 	length := len(self.data)
 	if length != 0 {
 		item := self.data[length-1]
+
+		// Zero the item for GC
+		var zero T
+		self.data[length-1] = zero
+
 		self.data = self.data[0 : length-1]
 
 		return item, true

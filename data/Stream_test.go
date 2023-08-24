@@ -25,3 +25,22 @@ func Test_EmptyStream(t *testing.T) {
 		t.Error("empty stream should have count of 0")
 	}
 }
+
+func Test_Streamable(t *testing.T) {
+	numbers := FromSlice[int]([]int{1, 2, 3})
+	sum := sumStream(numbers)
+
+	if sum != 6 {
+		t.Errorf("Expected 6 got %d", sum)
+	}
+}
+
+func sumStream(numbers Stream[int]) int {
+	total := 0
+
+	for i := numbers.Iterator(); i.MoveNext(); {
+		total += i.Current()
+	}
+
+	return total
+}

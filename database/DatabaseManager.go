@@ -3,6 +3,7 @@ package database
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 	"sync"
 )
 
@@ -16,23 +17,44 @@ type aliasDetails struct {
 	connectionInfo ConnectionInfo
 	initializer    sync.Once
 
-	database  *sql.DB
+	// The actual database connection
+	database *sql.DB
+
+	// If we failed to open a connection to the database then this is why
 	openError error
 }
 
 type DatabaseManager struct {
 	aliases map[string]*aliasDetails
+	lock    sync.Mutex
 }
 
+// Creates a new database manager
 func NewDatabaseManager() *DatabaseManager {
 	return &DatabaseManager{
 		aliases: make(map[string]*aliasDetails),
 	}
 }
 
+// Registers an alias with the database manager
 func (self *DatabaseManager) Register(alias string, connectionInfo ConnectionInfo) error {
+	if len(alias) == 0 {
+		return errors.New("alias is empty")
+	}
+
+	if len(connectionInfo.DriverName) == 0 {
+		return fmt.Errorf("driver name is empty: %s", alias)
+	}
+
+	if len(connectionInfo.ConnectionString) == 0 {
+		return fmt.Errorf("connection string is empty: %s", alias)
+	}
+
+	self.lock.Lock()
+	defer self.lock.Unlock()
+
 	if _, found := self.aliases[alias]; found {
-		return errors.New("alias already exists")
+		return fmt.Errorf("alias already exists: %s", alias)
 	}
 
 	details := &aliasDetails{
@@ -45,9 +67,9 @@ func (self *DatabaseManager) Register(alias string, connectionInfo ConnectionInf
 }
 
 func (self *DatabaseManager) Open(alias string) (*sql.DB, error) {
-	details, found := self.aliases[alias]
+	details, found := self.grabDetails(alias)
 	if !found {
-		return nil, errors.New("alias does not exist")
+		return nil, fmt.Errorf("alias does not exist: %s", alias)
 	}
 
 	details.initializer.Do(func() {
@@ -55,4 +77,12 @@ func (self *DatabaseManager) Open(alias string) (*sql.DB, error) {
 	})
 
 	return details.database, details.openError
+}
+
+func (self *DatabaseManager) grabDetails(alias string) (*aliasDetails, bool) {
+	self.lock.Lock()
+	defer self.lock.Unlock()
+
+	details, found := self.aliases[alias]
+	return details, found
 }

@@ -7,5 +7,6 @@ import "database/sql"
 //
 // Implemenetation must support concurrent calls from goroutines
 type DatabaseProvider interface {
+	// Attempts to open the database with the specified alias
 	Open(alias string) (*sql.DB, error)
 }

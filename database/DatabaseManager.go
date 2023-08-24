@@ -36,7 +36,10 @@ func NewDatabaseManager() *DatabaseManager {
 	}
 }
 
-// Registers an alias with the database manager
+// Registers an alias with the database manager.
+//
+// An application should register all connections during startup and then
+// reference this manager via the DatabaseProvider interface
 func (self *DatabaseManager) Register(alias string, connectionInfo ConnectionInfo) error {
 	if len(alias) == 0 {
 		return errors.New("alias is empty")
@@ -66,6 +69,10 @@ func (self *DatabaseManager) Register(alias string, connectionInfo ConnectionInf
 	return nil
 }
 
+// Attempts to open the database with the specified alias.
+// Callers should not close the database, they can hang onto it as long as they like.
+// The connections are initialized on demand, and the actual connection will be opened
+// the first time someone calls this method with a specific alias
 func (self *DatabaseManager) Open(alias string) (*sql.DB, error) {
 	details, found := self.grabDetails(alias)
 	if !found {

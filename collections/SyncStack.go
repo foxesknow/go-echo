@@ -18,7 +18,7 @@ type syncStackNode[T any] struct {
 }
 
 // Creates a new stack, which is thread safe
-func NewSyncStack[T any]() Stack[T] {
+func NewSyncStack[T any]() data.Stack[T] {
 	return &syncStack[T]{
 		lock:  sync.RWMutex{},
 		head:  nil,
@@ -36,7 +36,7 @@ func (self *syncStack[T]) Clear() {
 }
 
 // Pushes a new item onto the top of the stack
-func (self *syncStack[T]) Push(value T) Stack[T] {
+func (self *syncStack[T]) Push(value T) data.Stack[T] {
 	self.lock.Lock()
 	defer self.lock.Unlock()
 

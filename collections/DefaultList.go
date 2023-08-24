@@ -11,7 +11,7 @@ type defaultList[T any] struct {
 }
 
 // Creates a list backed by a slice
-func NewList[T any]() List[T] {
+func NewList[T any]() data.List[T] {
 	return &defaultList[T]{
 		items: make([]T, 0, 8),
 	}

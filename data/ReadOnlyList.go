@@ -1,4 +1,4 @@
-package collections
+package data
 
 type ReadOnlyList[T any] interface {
 	ReadOnlyCollection[T]

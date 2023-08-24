@@ -1,8 +1,4 @@
-package collections
-
-import (
-	"github.com/foxesknow/go-echo/data"
-)
+package data
 
 // Defines a read/write list
 type List[T any] interface {
@@ -28,7 +24,7 @@ type List[T any] interface {
 	IsEmpty() bool
 
 	// Returns a stream to the items in the stack, starting with the top item
-	Stream() data.Stream[T]
+	Stream() Stream[T]
 
 	// Removes the item at the specified index
 	RemoveAt(index int) error

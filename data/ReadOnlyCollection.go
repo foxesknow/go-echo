@@ -1,6 +1,4 @@
-package collections
-
-import "github.com/foxesknow/go-echo/data"
+package data
 
 type ReadOnlyCollection[T any] interface {
 	// Returns the number of items in the stack
@@ -10,5 +8,5 @@ type ReadOnlyCollection[T any] interface {
 	IsEmpty() bool
 
 	// Returns a stream to the items in the stack, starting with the top item
-	Stream() data.Stream[T]
+	Stream() Stream[T]
 }

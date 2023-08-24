@@ -7,7 +7,7 @@ type defaultMap[K comparable, V any] struct {
 }
 
 // Creates a new map that is not thread safe
-func NewMap[K comparable, V any]() Map[K, V] {
+func NewMap[K comparable, V any]() data.Map[K, V] {
 	return &defaultMap[K, V]{
 		m: make(map[K]V),
 	}

@@ -1,6 +1,4 @@
-package collections
-
-import "github.com/foxesknow/go-echo/data"
+package data
 
 type Stack[T any] interface {
 	// Adds an item to the stack
@@ -22,5 +20,5 @@ type Stack[T any] interface {
 	IsEmpty() bool
 
 	// Returns a stream to the items in the stack, starting with the top item
-	Stream() data.Stream[T]
+	Stream() Stream[T]
 }

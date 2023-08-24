@@ -6,7 +6,7 @@ type defaultSet[T comparable] struct {
 	set map[T]bool
 }
 
-func NewSet[T comparable]() Set[T] {
+func NewSet[T comparable]() data.Set[T] {
 	return &defaultSet[T]{
 		set: make(map[T]bool),
 	}

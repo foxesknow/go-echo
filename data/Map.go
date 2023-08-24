@@ -1,6 +1,4 @@
-package collections
-
-import "github.com/foxesknow/go-echo/data"
+package data
 
 type Map[K comparable, V any] interface {
 	// Checks to see if a key is in the map
@@ -28,11 +26,11 @@ type Map[K comparable, V any] interface {
 	IsEmpty() bool
 
 	// Returns a stream of all keys in the map, in an undefined order
-	Keys() data.Stream[K]
+	Keys() Stream[K]
 
 	// Returns a stream of all values in the map, in an undefined order
-	Values() data.Stream[V]
+	Values() Stream[V]
 
 	// Returns a stream of all pairs in the map, in an undefined order
-	KeyValuePairs() data.Stream[data.KeyValuePair[K, V]]
+	KeyValuePairs() Stream[KeyValuePair[K, V]]
 }

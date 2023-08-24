@@ -1,6 +1,4 @@
-package collections
-
-import "github.com/foxesknow/go-echo/data"
+package data
 
 type Set[T comparable] interface {
 	// Checks to see if a valie is in the set
@@ -23,11 +21,11 @@ type Set[T comparable] interface {
 	IsEmpty() bool
 
 	// Modifies the set to contain all items that are in the set and in the other set
-	Union(other data.Stream[T])
+	Union(other Stream[T])
 
 	// Modifies the set so it doesn't contain the items in the other set
-	Except(other data.Stream[T])
+	Except(other Stream[T])
 
 	// Returns a stream of all items in the set
-	Stream() data.Stream[T]
+	Stream() Stream[T]
 }

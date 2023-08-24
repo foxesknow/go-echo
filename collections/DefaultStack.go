@@ -9,7 +9,7 @@ type defaultStack[T any] struct {
 }
 
 // Creates a new stack that is not thread safe
-func NewStack[T any]() Stack[T] {
+func NewStack[T any]() data.Stack[T] {
 	return &defaultStack[T]{
 		data: nil,
 	}
@@ -21,7 +21,7 @@ func (self *defaultStack[T]) Clear() {
 }
 
 // Pushes a new item onto the top of the stack
-func (self *defaultStack[T]) Push(value T) Stack[T] {
+func (self *defaultStack[T]) Push(value T) data.Stack[T] {
 	self.data = append(self.data, value)
 	return self
 }

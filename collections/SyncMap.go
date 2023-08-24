@@ -12,7 +12,7 @@ type syncMap[K comparable, V any] struct {
 }
 
 // Creates a new map that is thread safe
-func NewSyncMap[K comparable, V any]() Map[K, V] {
+func NewSyncMap[K comparable, V any]() data.Map[K, V] {
 	return &syncMap[K, V]{
 		lock: sync.RWMutex{},
 		m:    make(map[K]V),

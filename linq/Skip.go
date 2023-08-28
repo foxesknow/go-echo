@@ -5,7 +5,7 @@ import "github.com/foxesknow/go-echo/data"
 // Skips the specified number of items.
 // If the count is less that 1 then no items are skipped.
 // This method is implemented by using deferred execution
-func Skip[T any](stream data.Stream[T], count int) data.Stream[T] {
+func Skip[T any](stream data.Streamable[T], count int) data.Streamable[T] {
 	// If we're not skipping anything then just return the stream
 	if count < 1 {
 		return stream
@@ -16,12 +16,12 @@ func Skip[T any](stream data.Stream[T], count int) data.Stream[T] {
 		return data.EmptyStream[T]()
 	}
 
-	return &data.FunctionStream[T]{
-		OnIterator: func() data.Iterator[T] {
-			i := stream.Iterator()
+	return &data.FunctionStreamable[T]{
+		OnGetStream: func() data.Stream[T] {
+			i := stream.GetStream()
 			state := 0
 
-			return &data.FunctionIterator[T]{
+			return &data.FunctionStream[T]{
 				OnMoveNext: func() bool {
 					switch state {
 					case 0:
@@ -56,14 +56,14 @@ func Skip[T any](stream data.Stream[T], count int) data.Stream[T] {
 
 // Skips items while the predicate is true and then returns the rest of the items in the stream.
 // This method is implemented by using deferred execution.
-func SkipWhile[T any](stream data.Stream[T], predicate func(T, int) bool) data.Stream[T] {
-	return &data.FunctionStream[T]{
-		OnIterator: func() data.Iterator[T] {
-			i := stream.Iterator()
+func SkipWhile[T any](stream data.Streamable[T], predicate func(T, int) bool) data.Streamable[T] {
+	return &data.FunctionStreamable[T]{
+		OnGetStream: func() data.Stream[T] {
+			i := stream.GetStream()
 			state := 0
 			index := 0
 
-			return &data.FunctionIterator[T]{
+			return &data.FunctionStream[T]{
 				OnMoveNext: func() bool {
 					switch state {
 					case 0:

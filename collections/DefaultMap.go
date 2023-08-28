@@ -68,16 +68,16 @@ func (self *defaultMap[K, V]) AddOrUpdate(key K, value V) {
 }
 
 // Returns a stream containing they keys in the map
-func (self *defaultMap[K, V]) Keys() data.Stream[K] {
+func (self *defaultMap[K, V]) Keys() data.Streamable[K] {
 	return data.FromMapKeys(self.m)
 }
 
 // Returns a stream containing the values in the map
-func (self *defaultMap[K, V]) Values() data.Stream[V] {
+func (self *defaultMap[K, V]) Values() data.Streamable[V] {
 	return data.FromMapValues(self.m)
 }
 
 // Returns a stream containing they KeyValue pairs in the map
-func (self *defaultMap[K, V]) KeyValuePairs() data.Stream[data.KeyValuePair[K, V]] {
+func (self *defaultMap[K, V]) KeyValuePairs() data.Streamable[data.KeyValuePair[K, V]] {
 	return data.FromMap(self.m)
 }

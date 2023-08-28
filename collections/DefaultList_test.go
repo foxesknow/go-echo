@@ -173,7 +173,7 @@ func Test_List_Stream_Empty(t *testing.T) {
 	list := NewList[int]()
 	stream := list.Stream()
 
-	if stream.Iterator().MoveNext() {
+	if stream.GetStream().MoveNext() {
 		t.Error("there should be nothing to stream")
 	}
 }
@@ -183,7 +183,7 @@ func Test_List_Stream(t *testing.T) {
 	list.Add(8)
 
 	stream := list.Stream()
-	i := stream.Iterator()
+	i := stream.GetStream()
 
 	if !i.MoveNext() {
 		t.Error("there should be something to stream")

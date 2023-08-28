@@ -5,14 +5,14 @@ import "github.com/foxesknow/go-echo/data"
 // Reverses the order of a sequence in reverse.
 // Once you start iterating over the sequence is converted to a slice and iterated over.
 // This method is implemented by using deferred execution.
-func Reverse[T any](stream data.Stream[T]) data.Stream[T] {
-	return &data.FunctionStream[T]{
-		OnIterator: func() data.Iterator[T] {
+func Reverse[T any](stream data.Streamable[T]) data.Streamable[T] {
+	return &data.FunctionStreamable[T]{
+		OnGetStream: func() data.Stream[T] {
 			next := 0
 			state := 0
 			var slice []T
 
-			return &data.FunctionIterator[T]{
+			return &data.FunctionStream[T]{
 				OnMoveNext: func() bool {
 					switch state {
 					case 0:

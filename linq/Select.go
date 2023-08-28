@@ -4,13 +4,13 @@ import "github.com/foxesknow/go-echo/data"
 
 // Projects the items in a sequence into a new form
 // This method is implemented by using deferred execution.
-func Select[T any, V any](stream data.Stream[T], projection func(T) V) data.Stream[V] {
-	return &data.FunctionStream[V]{
-		OnIterator: func() data.Iterator[V] {
+func Select[T any, V any](stream data.Streamable[T], projection func(T) V) data.Streamable[V] {
+	return &data.FunctionStreamable[V]{
+		OnGetStream: func() data.Stream[V] {
 			done := false
-			i := stream.Iterator()
+			i := stream.GetStream()
 
-			return &data.FunctionIterator[V]{
+			return &data.FunctionStream[V]{
 				OnMoveNext: func() bool {
 					if done {
 						return done
@@ -33,14 +33,14 @@ func Select[T any, V any](stream data.Stream[T], projection func(T) V) data.Stre
 
 // Projects the items in a sequence into a new form, supplying the index of the item in the sequence
 // This method is implemented by using deferred execution.
-func SelectIndex[T any, V any](stream data.Stream[T], projection func(T, int) V) data.Stream[V] {
-	return &data.FunctionStream[V]{
-		OnIterator: func() data.Iterator[V] {
+func SelectIndex[T any, V any](stream data.Streamable[T], projection func(T, int) V) data.Streamable[V] {
+	return &data.FunctionStreamable[V]{
+		OnGetStream: func() data.Stream[V] {
 			done := false
-			i := stream.Iterator()
+			i := stream.GetStream()
 			index := -1
 
-			return &data.FunctionIterator[V]{
+			return &data.FunctionStream[V]{
 				OnMoveNext: func() bool {
 					if done {
 						return done
@@ -64,16 +64,16 @@ func SelectIndex[T any, V any](stream data.Stream[T], projection func(T, int) V)
 
 // Projects each item of a Stream[T] to a  Stream[V] and flattens the result into one sequence
 // This method is implemented by using deferred execution.
-func SelectMany[T any, V any](stream data.Stream[T], selector func(T) data.Stream[V]) data.Stream[V] {
-	return &data.FunctionStream[V]{
-		OnIterator: func() data.Iterator[V] {
+func SelectMany[T any, V any](stream data.Streamable[T], selector func(T) data.Streamable[V]) data.Streamable[V] {
+	return &data.FunctionStreamable[V]{
+		OnGetStream: func() data.Stream[V] {
 			state := 0
 			var current V
 
-			i := stream.Iterator()
-			var v data.Iterator[V]
+			i := stream.GetStream()
+			var v data.Stream[V]
 
-			return &data.FunctionIterator[V]{
+			return &data.FunctionStream[V]{
 				OnMoveNext: func() bool {
 					for state != -1 {
 						switch state {
@@ -84,7 +84,7 @@ func SelectMany[T any, V any](stream data.Stream[T], selector func(T) data.Strea
 							}
 
 							state = 1
-							v = selector(i.Current()).Iterator()
+							v = selector(i.Current()).GetStream()
 							fallthrough
 
 						case 1:

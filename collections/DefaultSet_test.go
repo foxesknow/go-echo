@@ -118,7 +118,7 @@ func Test_DefaultSet_Stream_Empty(t *testing.T) {
 	s := NewSet[string]()
 
 	stream := s.Stream()
-	i := stream.Iterator()
+	i := stream.GetStream()
 
 	if i.MoveNext() {
 		t.Error("there should be nothing in the set")
@@ -130,7 +130,7 @@ func Test_DefaultSet_Stream(t *testing.T) {
 	s.Add("Kate")
 
 	stream := s.Stream()
-	i := stream.Iterator()
+	i := stream.GetStream()
 
 	if !i.MoveNext() {
 		t.Error("there should be something in the set")

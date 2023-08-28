@@ -31,37 +31,37 @@ func extractPairs[K comparable, V any](m map[K]V) []KeyValuePair[K, V] {
 }
 
 // Returns a stream for the keys in a map
-func FromMapKeys[K comparable, V any](m map[K]V) Stream[K] {
-	return &FunctionStream[K]{
-		OnIterator: func() Iterator[K] {
+func FromMapKeys[K comparable, V any](m map[K]V) Streamable[K] {
+	return &FunctionStreamable[K]{
+		OnGetStream: func() Stream[K] {
 			// Extract the keys here so we only do so if the user does enumerate
 			slice := extractKeys(m)
 
-			return &sliceIterator[K]{slice: slice, next: -1}
+			return &sliceStream[K]{slice: slice, next: -1}
 		},
 	}
 }
 
 // Returns a stream for the values in a map
-func FromMapValues[K comparable, V any](m map[K]V) Stream[V] {
-	return &FunctionStream[V]{
-		OnIterator: func() Iterator[V] {
+func FromMapValues[K comparable, V any](m map[K]V) Streamable[V] {
+	return &FunctionStreamable[V]{
+		OnGetStream: func() Stream[V] {
 			// Extract the keys here so we only do so if the user does enumerate
 			slice := extractValues(m)
 
-			return &sliceIterator[V]{slice: slice, next: -1}
+			return &sliceStream[V]{slice: slice, next: -1}
 		},
 	}
 }
 
 // Returns a stream for the key/value pairs in a map
-func FromMap[K comparable, V any](m map[K]V) Stream[KeyValuePair[K, V]] {
-	return &FunctionStream[KeyValuePair[K, V]]{
-		OnIterator: func() Iterator[KeyValuePair[K, V]] {
+func FromMap[K comparable, V any](m map[K]V) Streamable[KeyValuePair[K, V]] {
+	return &FunctionStreamable[KeyValuePair[K, V]]{
+		OnGetStream: func() Stream[KeyValuePair[K, V]] {
 			// Extract the keys here so we only do so if the user does enumerate
 			slice := extractPairs(m)
 
-			return &sliceIterator[KeyValuePair[K, V]]{slice: slice, next: -1}
+			return &sliceStream[KeyValuePair[K, V]]{slice: slice, next: -1}
 		},
 	}
 }

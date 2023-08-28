@@ -6,19 +6,19 @@ import "github.com/foxesknow/go-echo/data"
 // Every chunk accept the last will have "size" items in it.
 // The last chunk will have the remaining elements, but will never be empty
 // This method is implemented by using deferred execution.
-func Chunk[T any](stream data.Stream[T], size int) data.Stream[[]T] {
+func Chunk[T any](stream data.Streamable[T], size int) data.Streamable[[]T] {
 	if size < 1 {
 		slice := ToSlice(stream)
 		return data.FromValues(slice)
 	}
 
-	return &data.FunctionStream[[]T]{
-		OnIterator: func() data.Iterator[[]T] {
+	return &data.FunctionStreamable[[]T]{
+		OnGetStream: func() data.Stream[[]T] {
 			var chunk []T
 			done := false
-			it := stream.Iterator()
+			it := stream.GetStream()
 
-			return &data.FunctionIterator[[]T]{
+			return &data.FunctionStream[[]T]{
 				OnMoveNext: func() bool {
 					if done {
 						chunk = nil

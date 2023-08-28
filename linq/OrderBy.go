@@ -7,7 +7,7 @@ import (
 )
 
 // Does a stable ordering of the stream
-func OrderBy[T any](stream data.Stream[T], less func(lhs, rhs T) bool) data.Stream[T] {
+func OrderBy[T any](stream data.Streamable[T], less func(lhs, rhs T) bool) data.Streamable[T] {
 	if collection, ok := stream.(data.Collection); ok {
 		if collection.Count() == 0 {
 			return data.EmptyStream[T]()
@@ -17,8 +17,8 @@ func OrderBy[T any](stream data.Stream[T], less func(lhs, rhs T) bool) data.Stre
 		}
 	}
 
-	return &data.FunctionStream[T]{
-		OnIterator: func() data.Iterator[T] {
+	return &data.FunctionStreamable[T]{
+		OnGetStream: func() data.Stream[T] {
 			slice := ToSlice(stream)
 			sort.SliceStable(slice, func(i, j int) bool {
 				return less(slice[i], slice[j])
@@ -26,7 +26,7 @@ func OrderBy[T any](stream data.Stream[T], less func(lhs, rhs T) bool) data.Stre
 
 			next := -1
 
-			return &data.FunctionIterator[T]{
+			return &data.FunctionStream[T]{
 				OnMoveNext: func() bool {
 					if next+1 < len(slice) {
 						next++

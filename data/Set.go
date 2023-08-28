@@ -21,11 +21,11 @@ type Set[T comparable] interface {
 	IsEmpty() bool
 
 	// Modifies the set to contain all items that are in the set and in the other set
-	Union(other Stream[T])
+	Union(other Streamable[T])
 
 	// Modifies the set so it doesn't contain the items in the other set
-	Except(other Stream[T])
+	Except(other Streamable[T])
 
 	// Returns a stream of all items in the set
-	Stream() Stream[T]
+	Stream() Streamable[T]
 }

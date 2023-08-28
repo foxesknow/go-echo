@@ -20,5 +20,5 @@ type Stack[T any] interface {
 	IsEmpty() bool
 
 	// Returns a stream to the items in the stack, starting with the top item
-	Stream() Stream[T]
+	Stream() Streamable[T]
 }

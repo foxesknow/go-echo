@@ -7,9 +7,9 @@ import "github.com/foxesknow/go-echo/data"
 // If not found then (false, -1) is returned.
 // Note that depending on the underlying sequence the index may not make sense.
 // For example, for a slice it is a valid index, but for the keys of a map it is meaningless
-func Contains[T comparable](stream data.Stream[T], value T) (found bool, index int) {
+func Contains[T comparable](stream data.Streamable[T], value T) (found bool, index int) {
 	index = 0
-	for i := stream.Iterator(); i.MoveNext(); {
+	for i := stream.GetStream(); i.MoveNext(); {
 		if i.Current() == value {
 			return true, index
 		}
@@ -25,9 +25,9 @@ func Contains[T comparable](stream data.Stream[T], value T) (found bool, index i
 // If not found then (false, -1) is returned.
 // Note that depending on the underlying sequence the index may not make sense.
 // For example, for a slice it is a valid index, but for the keys of a map it is meaningless
-func ContainsWhere[T any](stream data.Stream[T], compare func(T) bool) (found bool, index int) {
+func ContainsWhere[T any](stream data.Streamable[T], compare func(T) bool) (found bool, index int) {
 	index = 0
-	for i := stream.Iterator(); i.MoveNext(); {
+	for i := stream.GetStream(); i.MoveNext(); {
 		if compare(i.Current()) {
 			return true, index
 		}

@@ -159,7 +159,7 @@ func Test_DefaultMap_Keys(t *testing.T) {
 	m.Add(3, "Ben")
 	m.AddOrUpdate(4, "Hurley")
 
-	it := m.Keys().Iterator()
+	it := m.Keys().GetStream()
 
 	for i := 1; i <= 4; i++ {
 		if !it.MoveNext() {
@@ -181,7 +181,7 @@ func Test_DefaultMap_Values(t *testing.T) {
 	m.Add(3, "Ben")
 	m.AddOrUpdate(4, "Hurley")
 
-	it := m.Values().Iterator()
+	it := m.Values().GetStream()
 
 	for i := 1; i <= 4; i++ {
 		if !it.MoveNext() {
@@ -203,7 +203,7 @@ func Test_DefaultMap_KeyValuePairs(t *testing.T) {
 	m.Add(3, "Ben")
 	m.AddOrUpdate(4, "Hurley")
 
-	it := m.KeyValuePairs().Iterator()
+	it := m.KeyValuePairs().GetStream()
 
 	for i := 1; i <= 4; i++ {
 		if !it.MoveNext() {

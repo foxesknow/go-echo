@@ -64,18 +64,18 @@ func (self *defaultStack[T]) IsEmpty() bool {
 	return len(self.data) == 0
 }
 
-func (self *defaultStack[T]) Stream() data.Stream[T] {
+func (self *defaultStack[T]) Stream() data.Streamable[T] {
 	if len(self.data) == 0 {
 		return data.EmptyStream[T]()
 	}
 
-	return &data.FunctionStream[T]{
-		OnIterator: func() data.Iterator[T] {
+	return &data.FunctionStreamable[T]{
+		OnGetStream: func() data.Stream[T] {
 			slice := self.data
 			index := len(slice) - 1
 			var current T
 
-			return &data.FunctionIterator[T]{
+			return &data.FunctionStream[T]{
 				OnMoveNext: func() bool {
 					if index != -1 {
 						current = self.data[index]

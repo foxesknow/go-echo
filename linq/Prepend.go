@@ -4,14 +4,14 @@ import "github.com/foxesknow/go-echo/data"
 
 // Adds an item to the fromt of the sequence
 // This method is implemented by using deferred execution.
-func Prepend[T any](stream data.Stream[T], item T) data.Stream[T] {
-	return &data.FunctionStream[T]{
-		OnIterator: func() data.Iterator[T] {
+func Prepend[T any](stream data.Streamable[T], item T) data.Streamable[T] {
+	return &data.FunctionStreamable[T]{
+		OnGetStream: func() data.Stream[T] {
 			var current T
-			i := stream.Iterator()
+			i := stream.GetStream()
 			state := 0
 
-			return &data.FunctionIterator[T]{
+			return &data.FunctionStream[T]{
 				OnMoveNext: func() bool {
 					switch state {
 					case 0:

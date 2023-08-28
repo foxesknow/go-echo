@@ -9,7 +9,7 @@ import (
 
 // Returns the first item in the sequence if there is one
 // otherwise return (ZeroValue, false)
-func First[T any](stream data.Stream[T]) (item T, err error) {
+func First[T any](stream data.Streamable[T]) (item T, err error) {
 	if indexable, ok := stream.(data.IndexableCollection[T]); ok {
 		if indexable.Count() == 0 {
 			err = makeNoItemsInStream()
@@ -27,7 +27,7 @@ func First[T any](stream data.Stream[T]) (item T, err error) {
 		}
 	}
 
-	if i := stream.Iterator(); i.MoveNext() {
+	if i := stream.GetStream(); i.MoveNext() {
 		return i.Current(), nil
 	}
 
@@ -36,9 +36,9 @@ func First[T any](stream data.Stream[T]) (item T, err error) {
 
 // Returns the first item in a sequence that satisfies a given predicate
 // otherwise return (ZeroValue, false)
-func FirstWhere[T any](stream data.Stream[T], predicate func(T) bool) (item T, err error) {
+func FirstWhere[T any](stream data.Streamable[T], predicate func(T) bool) (item T, err error) {
 
-	for i := stream.Iterator(); i.MoveNext(); {
+	for i := stream.GetStream(); i.MoveNext(); {
 		current := i.Current()
 		if predicate(current) {
 			return current, nil
@@ -49,7 +49,7 @@ func FirstWhere[T any](stream data.Stream[T], predicate func(T) bool) (item T, e
 }
 
 // Returns the first item in the sequence, or a default value is the sequence is empty
-func FirstOrDefault[T any](stream data.Stream[T], defaultValue T) T {
+func FirstOrDefault[T any](stream data.Streamable[T], defaultValue T) T {
 	if item, err := First(stream); err == nil {
 		return item
 	}
@@ -59,7 +59,7 @@ func FirstOrDefault[T any](stream data.Stream[T], defaultValue T) T {
 
 // Returns the first item in the sequence that matches a predicate,
 // or a default value is the sequence is empty
-func FirstOrDefaultWhere[T any](stream data.Stream[T], defaultValue T, predicate func(T) bool) T {
+func FirstOrDefaultWhere[T any](stream data.Streamable[T], defaultValue T, predicate func(T) bool) T {
 	if item, err := FirstWhere(stream, predicate); err == nil {
 		return item
 	}

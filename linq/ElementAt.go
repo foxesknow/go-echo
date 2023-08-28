@@ -7,7 +7,7 @@ import (
 // Returns the item at the specified index within a sequence
 // Returns (item, true) if found.
 // If the item is not found, or index is less than zero then (zero, false) is returned
-func ElementAt[T any](stream data.Stream[T], index int) (item T, err error) {
+func ElementAt[T any](stream data.Streamable[T], index int) (item T, err error) {
 	if index < 0 {
 		err = makeInvalidIndex(index)
 		return
@@ -19,7 +19,7 @@ func ElementAt[T any](stream data.Stream[T], index int) (item T, err error) {
 	}
 
 	count := 0
-	for i := stream.Iterator(); i.MoveNext(); count++ {
+	for i := stream.GetStream(); i.MoveNext(); count++ {
 		if count == index {
 			return i.Current(), nil
 		}
@@ -31,7 +31,7 @@ func ElementAt[T any](stream data.Stream[T], index int) (item T, err error) {
 
 // Returns the item at the specified index within a sequence.
 // If the index does not exist, or is invalid, then the default value is returned.
-func ElementAtOrDefault[T any](stream data.Stream[T], index int, defaultValue T) T {
+func ElementAtOrDefault[T any](stream data.Streamable[T], index int, defaultValue T) T {
 	if item, err := ElementAt(stream, index); err == nil {
 		return item
 	}

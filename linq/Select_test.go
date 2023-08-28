@@ -49,7 +49,7 @@ func Test_SelectIndex(t *testing.T) {
 }
 
 func Test_SelectMany_Empty(t *testing.T) {
-	var sequence = SelectMany(data.EmptyStream[[]int](), func(inner []int) data.Stream[int] { return data.FromSlice(inner) })
+	var sequence = SelectMany(data.EmptyStream[[]int](), func(inner []int) data.Streamable[int] { return data.FromSlice(inner) })
 	flattened := ToSlice(sequence)
 
 	if len(flattened) != 0 {
@@ -63,7 +63,7 @@ func Test_SelectMany(t *testing.T) {
 	numbers[1] = []int{3, 4, 5}
 	numbers[2] = []int{6, 7, 8}
 
-	var sequence = SelectMany(data.FromSlice(numbers), func(inner []int) data.Stream[int] { return data.FromSlice(inner) })
+	var sequence = SelectMany(data.FromSlice(numbers), func(inner []int) data.Streamable[int] { return data.FromSlice(inner) })
 	flattened := ToSlice(sequence)
 
 	for i := 0; i < 9; i++ {

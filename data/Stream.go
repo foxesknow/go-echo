@@ -3,12 +3,12 @@ package data
 import "fmt"
 
 // Indicates that a type can stream the values it contains
-type Stream[T any] interface {
+type Streamable[T any] interface {
 	// Create an iterator to the values in the stream
-	Iterator() Iterator[T]
+	GetStream() Stream[T]
 }
 
-type Iterator[T any] interface {
+type Stream[T any] interface {
 	// Moves to the next item, returning true if there is a next item, false if not
 	MoveNext() bool
 
@@ -17,32 +17,32 @@ type Iterator[T any] interface {
 }
 
 // Allows an stream to be created by calling a factory function
-type FunctionStream[T any] struct {
-	OnIterator func() Iterator[T]
+type FunctionStreamable[T any] struct {
+	OnGetStream func() Stream[T]
 }
 
-func (self *FunctionStream[T]) Iterator() Iterator[T] {
-	return self.OnIterator()
+func (self *FunctionStreamable[T]) GetStream() Stream[T] {
+	return self.OnGetStream()
 }
 
 // Defers iterator calls to functions
-type FunctionIterator[T any] struct {
+type FunctionStream[T any] struct {
 	OnMoveNext func() bool
 	OnCurrent  func() T
 }
 
-func (self *FunctionIterator[T]) MoveNext() bool {
+func (self *FunctionStream[T]) MoveNext() bool {
 	return self.OnMoveNext()
 }
 
-func (self *FunctionIterator[T]) Current() T {
+func (self *FunctionStream[T]) Current() T {
 	return self.OnCurrent()
 }
 
 type emptyStream[T any] struct {
 }
 
-func (self *emptyStream[T]) Iterator() Iterator[T] {
+func (self *emptyStream[T]) GetStream() Stream[T] {
 	return &emptyIterator[T]{}
 }
 
@@ -68,6 +68,6 @@ func (self *emptyIterator[T]) Current() T {
 }
 
 // Returns a stream that contains nothing
-func EmptyStream[T any]() Stream[T] {
+func EmptyStream[T any]() Streamable[T] {
 	return &emptyStream[T]{}
 }

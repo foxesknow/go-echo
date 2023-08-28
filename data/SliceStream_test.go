@@ -6,7 +6,7 @@ import (
 
 func Test_FromValues(t *testing.T) {
 	stream := FromValues("hello", "goodbye")
-	i := stream.Iterator()
+	i := stream.GetStream()
 
 	if !i.MoveNext() {
 		t.Error("should have moved")
@@ -40,7 +40,7 @@ func Test_FromValues(t *testing.T) {
 
 func Test_FromSlice(t *testing.T) {
 	stream := FromSlice([]string{"hello", "goodbye"})
-	i := stream.Iterator()
+	i := stream.GetStream()
 
 	if !i.MoveNext() {
 		t.Error("should have moved")
@@ -74,7 +74,7 @@ func Test_FromSlice(t *testing.T) {
 
 func Test_FromSlice_Indexable(t *testing.T) {
 	stream := FromSlice([]string{"hello", "goodbye"})
-	i := stream.Iterator()
+	i := stream.GetStream()
 
 	if !i.MoveNext() {
 		t.Error("should have moved")

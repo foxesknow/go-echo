@@ -26,11 +26,11 @@ type Map[K comparable, V any] interface {
 	IsEmpty() bool
 
 	// Returns a stream of all keys in the map, in an undefined order
-	Keys() Stream[K]
+	Keys() Streamable[K]
 
 	// Returns a stream of all values in the map, in an undefined order
-	Values() Stream[V]
+	Values() Streamable[V]
 
 	// Returns a stream of all pairs in the map, in an undefined order
-	KeyValuePairs() Stream[KeyValuePair[K, V]]
+	KeyValuePairs() Streamable[KeyValuePair[K, V]]
 }

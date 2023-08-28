@@ -6,15 +6,15 @@ import "github.com/foxesknow/go-echo/data"
 // which is streamed back
 // If the streams are of different lengths then iteration will stop at the end of the shortest stream.
 // This method is implemented by using deferred execution
-func Zip[T1 any, T2 any, R any](first data.Stream[T1], second data.Stream[T2], combine func(T1, T2) R) data.Stream[R] {
-	return &data.FunctionStream[R]{
-		OnIterator: func() data.Iterator[R] {
-			i1 := first.Iterator()
-			i2 := second.Iterator()
+func Zip[T1 any, T2 any, R any](first data.Streamable[T1], second data.Streamable[T2], combine func(T1, T2) R) data.Streamable[R] {
+	return &data.FunctionStreamable[R]{
+		OnGetStream: func() data.Stream[R] {
+			i1 := first.GetStream()
+			i2 := second.GetStream()
 			done := false
 			var current R
 
-			return &data.FunctionIterator[R]{
+			return &data.FunctionStream[R]{
 				OnMoveNext: func() bool {
 					if done {
 						return false

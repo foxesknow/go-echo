@@ -4,14 +4,14 @@ import "github.com/foxesknow/go-echo/data"
 
 // Appends a value to the end of a sequence.
 // This method is implemented by using deferred execution.
-func Append[T any](stream data.Stream[T], item T) data.Stream[T] {
-	return &data.FunctionStream[T]{
-		OnIterator: func() data.Iterator[T] {
+func Append[T any](stream data.Streamable[T], item T) data.Streamable[T] {
+	return &data.FunctionStreamable[T]{
+		OnGetStream: func() data.Stream[T] {
 			var current T
 			done := false
-			i := stream.Iterator()
+			i := stream.GetStream()
 
-			return &data.FunctionIterator[T]{
+			return &data.FunctionStream[T]{
 				OnMoveNext: func() bool {
 					if done {
 						return false

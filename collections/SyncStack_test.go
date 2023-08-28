@@ -104,7 +104,7 @@ func Test_SyncStack_Stream(t *testing.T) {
 	stack := NewSyncStack[int]()
 
 	stack.Push(10).Push(20).Push(30)
-	i := stack.Stream().Iterator()
+	i := stack.Stream().GetStream()
 
 	for _, value := range []int{30, 20, 10} {
 		if !i.MoveNext() {

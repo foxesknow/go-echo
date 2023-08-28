@@ -97,17 +97,17 @@ func (self *syncStack[T]) IsEmpty() bool {
 // The item on the top of the stack is first in the stream.
 // As this is a sync stack the returned items represent a snapshot of the items in the
 // stack, and by the time you have iterated over the stack it may have changed.
-func (self *syncStack[T]) Stream() data.Stream[T] {
+func (self *syncStack[T]) Stream() data.Streamable[T] {
 	if self.IsEmpty() {
 		return data.EmptyStream[T]()
 	}
 
-	return &data.FunctionStream[T]{
-		OnIterator: func() data.Iterator[T] {
+	return &data.FunctionStreamable[T]{
+		OnGetStream: func() data.Stream[T] {
 			head := self.grabHead()
 			var current T
 
-			return &data.FunctionIterator[T]{
+			return &data.FunctionStream[T]{
 				OnMoveNext: func() bool {
 					if head != nil {
 						current = head.Value

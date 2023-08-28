@@ -3,13 +3,13 @@ package data
 import "context"
 
 // Generates a stream of data by calling a generator function
-func Generate[T any](generator func() (value T, keepGoing bool)) Stream[T] {
-	return &FunctionStream[T]{
-		OnIterator: func() Iterator[T] {
+func Generate[T any](generator func() (value T, keepGoing bool)) Streamable[T] {
+	return &FunctionStreamable[T]{
+		OnGetStream: func() Stream[T] {
 			var current T
 			keepGoing := true
 
-			return &FunctionIterator[T]{
+			return &FunctionStream[T]{
 				OnMoveNext: func() bool {
 					if keepGoing {
 						current, keepGoing = generator()
@@ -32,14 +32,14 @@ func Generate[T any](generator func() (value T, keepGoing bool)) Stream[T] {
 
 // Returns "count" numbers, starting from "start" and increasing by 1
 // if count is less than 1 then nothing is returned
-func Range(start, count int) Stream[int] {
-	return &FunctionStream[int]{
-		OnIterator: func() Iterator[int] {
+func Range(start, count int) Streamable[int] {
+	return &FunctionStreamable[int]{
+		OnGetStream: func() Stream[int] {
 			var current int
 			next := start
 			i := 0
 
-			return &FunctionIterator[int]{
+			return &FunctionStream[int]{
 				OnMoveNext: func() bool {
 					if i < count {
 						current = next
@@ -60,12 +60,12 @@ func Range(start, count int) Stream[int] {
 }
 
 // Returns a sequence that will yield "item" the specified number of times
-func Repeat[T any](item T, count int) Stream[T] {
-	return &FunctionStream[T]{
-		OnIterator: func() Iterator[T] {
+func Repeat[T any](item T, count int) Streamable[T] {
+	return &FunctionStreamable[T]{
+		OnGetStream: func() Stream[T] {
 			i := 0
 
-			return &FunctionIterator[T]{
+			return &FunctionStream[T]{
 				OnMoveNext: func() bool {
 					if i < count {
 						i++
@@ -84,12 +84,12 @@ func Repeat[T any](item T, count int) Stream[T] {
 }
 
 // Enumerates over data received from a channel until the channel is closed
-func FromChannel[T any](channel <-chan T) Stream[T] {
-	return &FunctionStream[T]{
-		OnIterator: func() Iterator[T] {
+func FromChannel[T any](channel <-chan T) Streamable[T] {
+	return &FunctionStreamable[T]{
+		OnGetStream: func() Stream[T] {
 			var current T
 
-			return &FunctionIterator[T]{
+			return &FunctionStream[T]{
 				OnMoveNext: func() bool {
 					item, ok := <-channel
 					if ok {
@@ -110,13 +110,13 @@ func FromChannel[T any](channel <-chan T) Stream[T] {
 }
 
 // Creates a stream from a channel and supports cancellation via a context
-func FromChannelWithContext[T any](channel <-chan T, cancel context.Context) Stream[T] {
-	return &FunctionStream[T]{
-		OnIterator: func() Iterator[T] {
+func FromChannelWithContext[T any](channel <-chan T, cancel context.Context) Streamable[T] {
+	return &FunctionStreamable[T]{
+		OnGetStream: func() Stream[T] {
 			var current T
 			var done bool
 
-			return &FunctionIterator[T]{
+			return &FunctionStream[T]{
 				OnMoveNext: func() bool {
 					if done {
 						return false
@@ -143,12 +143,12 @@ func FromChannelWithContext[T any](channel <-chan T, cancel context.Context) Str
 
 // Enumerates over data received from a channel until the predicate evaluates to false
 // or the channel is closed.
-func FromChannelWhile[T any](channel <-chan T, predicate func(T) bool) Stream[T] {
-	return &FunctionStream[T]{
-		OnIterator: func() Iterator[T] {
+func FromChannelWhile[T any](channel <-chan T, predicate func(T) bool) Streamable[T] {
+	return &FunctionStreamable[T]{
+		OnGetStream: func() Stream[T] {
 			var current T
 
-			return &FunctionIterator[T]{
+			return &FunctionStream[T]{
 				OnMoveNext: func() bool {
 					item, ok := <-channel
 					if ok {

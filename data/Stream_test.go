@@ -6,7 +6,7 @@ import (
 
 func Test_EmptyStream(t *testing.T) {
 	stream := EmptyStream[int]()
-	i := stream.Iterator()
+	i := stream.GetStream()
 
 	if i.MoveNext() {
 		t.Error("shouldn't be able to move in an empty stream")
@@ -35,10 +35,10 @@ func Test_Streamable(t *testing.T) {
 	}
 }
 
-func sumStream(numbers Stream[int]) int {
+func sumStream(numbers Streamable[int]) int {
 	total := 0
 
-	for i := numbers.Iterator(); i.MoveNext(); {
+	for i := numbers.GetStream(); i.MoveNext(); {
 		total += i.Current()
 	}
 

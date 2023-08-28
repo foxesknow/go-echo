@@ -9,7 +9,7 @@ import (
 
 // Returns the only item in a sequence, or an error if there is not exactly one item in the sequence.
 // This method is implemented by using deferred execution.
-func Single[T any](stream data.Stream[T]) (item T, err error) {
+func Single[T any](stream data.Streamable[T]) (item T, err error) {
 	if collection, ok := stream.(data.Collection); ok {
 		if collection.Count() == 0 {
 			return generic.Zero[T](), fmt.Errorf("stream is empty")
@@ -18,7 +18,7 @@ func Single[T any](stream data.Stream[T]) (item T, err error) {
 		}
 	}
 
-	i := stream.Iterator()
+	i := stream.GetStream()
 	if i.MoveNext() {
 		item = i.Current()
 
@@ -35,11 +35,11 @@ func Single[T any](stream data.Stream[T]) (item T, err error) {
 // Returns the only item in a sequece that matches the predicate.
 // If the stream is empty, or more than one item matches the predicate than an error is returned.
 // This method is implemented by using deferred execution.
-func SingleWhere[T any](stream data.Stream[T], predicate func(T) bool) (item T, err error) {
+func SingleWhere[T any](stream data.Streamable[T], predicate func(T) bool) (item T, err error) {
 	itemsMatched := 0
 	var matchedItem T
 
-	for i := stream.Iterator(); i.MoveNext(); {
+	for i := stream.GetStream(); i.MoveNext(); {
 		if predicate(i.Current()) {
 			if itemsMatched == 1 {
 				err = fmt.Errorf("more than one item matched the predicate")

@@ -3,7 +3,7 @@ package linq
 import "github.com/foxesknow/go-echo/data"
 
 // Converts a sequence to a slice
-func ToSlice[T any](stream data.Stream[T]) []T {
+func ToSlice[T any](stream data.Streamable[T]) []T {
 	capacity := 8
 
 	// We can pre-allocate all the space up front
@@ -16,8 +16,8 @@ func ToSlice[T any](stream data.Stream[T]) []T {
 }
 
 // Converts a sequence to a slice and adds it to an exsiting slice
-func ToExistingSlice[T any](stream data.Stream[T], slice []T) []T {
-	for i := stream.Iterator(); i.MoveNext(); {
+func ToExistingSlice[T any](stream data.Streamable[T], slice []T) []T {
+	for i := stream.GetStream(); i.MoveNext(); {
 		slice = append(slice, i.Current())
 	}
 

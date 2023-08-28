@@ -77,7 +77,7 @@ func (self *defaultList[T]) Insert(index int, item T) error {
 	return nil
 }
 
-func (self *defaultList[T]) Stream() data.Stream[T] {
+func (self *defaultList[T]) Stream() data.Streamable[T] {
 	if len(self.items) == 0 {
 		return data.EmptyStream[T]()
 	}

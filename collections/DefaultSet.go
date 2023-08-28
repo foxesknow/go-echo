@@ -47,7 +47,7 @@ func (self *defaultSet[T]) Clear() {
 	self.set = make(map[T]bool)
 }
 
-func (self *defaultSet[T]) Stream() data.Stream[T] {
+func (self *defaultSet[T]) Stream() data.Streamable[T] {
 	if len(self.set) == 0 {
 		return data.EmptyStream[T]()
 	}
@@ -55,14 +55,14 @@ func (self *defaultSet[T]) Stream() data.Stream[T] {
 	return data.FromMapKeys(self.set)
 }
 
-func (self *defaultSet[T]) Union(other data.Stream[T]) {
-	for i := other.Iterator(); i.MoveNext(); {
+func (self *defaultSet[T]) Union(other data.Streamable[T]) {
+	for i := other.GetStream(); i.MoveNext(); {
 		self.set[i.Current()] = true
 	}
 }
 
-func (self *defaultSet[T]) Except(other data.Stream[T]) {
-	for i := other.Iterator(); i.MoveNext(); {
+func (self *defaultSet[T]) Except(other data.Streamable[T]) {
+	for i := other.GetStream(); i.MoveNext(); {
 		delete(self.set, i.Current())
 	}
 }

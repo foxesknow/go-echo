@@ -6,7 +6,7 @@ import (
 )
 
 func Test_Range(t *testing.T) {
-	i := Range(10, 3).Iterator()
+	i := Range(10, 3).GetStream()
 
 	if i.MoveNext() {
 		if i.Current() != 10 {
@@ -38,7 +38,7 @@ func Test_Range(t *testing.T) {
 }
 
 func Test_Range_Zero_Count(t *testing.T) {
-	i := Range(10, 0).Iterator()
+	i := Range(10, 0).GetStream()
 
 	if i.MoveNext() {
 		t.Error("There shouldn't be any more data")
@@ -46,7 +46,7 @@ func Test_Range_Zero_Count(t *testing.T) {
 }
 
 func Test_Range_Negative_Count(t *testing.T) {
-	i := Range(10, -3).Iterator()
+	i := Range(10, -3).GetStream()
 
 	if i.MoveNext() {
 		t.Error("There shouldn't be any more data")
@@ -54,7 +54,7 @@ func Test_Range_Negative_Count(t *testing.T) {
 }
 
 func Test_Repeat(t *testing.T) {
-	i := Repeat("hello", 3).Iterator()
+	i := Repeat("hello", 3).GetStream()
 
 	if i.MoveNext() {
 		if i.Current() != "hello" {
@@ -98,7 +98,7 @@ func Test_FromChannel(t *testing.T) {
 
 	sum := 0
 	stream := FromChannel(channel)
-	for i := stream.Iterator(); i.MoveNext(); {
+	for i := stream.GetStream(); i.MoveNext(); {
 		current := i.Current()
 		sum += current
 
@@ -125,7 +125,7 @@ func Test_FromChannel_CloseBeforeAllRead(t *testing.T) {
 
 	sum := 0
 	stream := FromChannel(channel)
-	for i := stream.Iterator(); i.MoveNext(); {
+	for i := stream.GetStream(); i.MoveNext(); {
 		current := i.Current()
 		sum += current
 
@@ -154,7 +154,7 @@ func Test_FromChannelWithContext(t *testing.T) {
 
 	sum := 0
 	stream := FromChannelWithContext(channel, ctx)
-	for i := stream.Iterator(); i.MoveNext(); {
+	for i := stream.GetStream(); i.MoveNext(); {
 		current := i.Current()
 		sum += current
 	}
@@ -172,7 +172,7 @@ func Test_FromChannelWhile(t *testing.T) {
 		stream := FromChannelWhile(channel, func(i int) bool { return i != -1 })
 		sum := 0
 
-		for i := stream.Iterator(); i.MoveNext(); {
+		for i := stream.GetStream(); i.MoveNext(); {
 			sum += i.Current()
 		}
 
@@ -203,7 +203,7 @@ func Test_Generate(t *testing.T) {
 	})
 
 	sum := 0
-	for i := stream.Iterator(); i.MoveNext(); {
+	for i := stream.GetStream(); i.MoveNext(); {
 		current := i.Current()
 		sum += current
 	}

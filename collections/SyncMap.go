@@ -98,7 +98,7 @@ func (self *syncMap[K, V]) AddOrUpdate(key K, value V) {
 }
 
 // Returns a stream containing they keys in the map
-func (self *syncMap[K, V]) Keys() data.Stream[K] {
+func (self *syncMap[K, V]) Keys() data.Streamable[K] {
 	self.lock.RLock()
 	defer self.lock.RUnlock()
 
@@ -106,7 +106,7 @@ func (self *syncMap[K, V]) Keys() data.Stream[K] {
 }
 
 // Returns a stream containing the values in the map
-func (self *syncMap[K, V]) Values() data.Stream[V] {
+func (self *syncMap[K, V]) Values() data.Streamable[V] {
 	self.lock.RLock()
 	defer self.lock.RUnlock()
 
@@ -114,7 +114,7 @@ func (self *syncMap[K, V]) Values() data.Stream[V] {
 }
 
 // Returns a stream containing they KeyValue pairs in the map
-func (self *syncMap[K, V]) KeyValuePairs() data.Stream[data.KeyValuePair[K, V]] {
+func (self *syncMap[K, V]) KeyValuePairs() data.Streamable[data.KeyValuePair[K, V]] {
 	self.lock.RLock()
 	defer self.lock.RUnlock()
 
